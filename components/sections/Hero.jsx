@@ -11,8 +11,8 @@ import { recruiterBriefData } from "@/lib/data/certifications";
 const liveApps = [
   { name: "MAAZTER", bg: "from-purple-600 to-indigo-700", color: "#8B5CF6", description: "Samacheer LMS Portal", icon: "/api/app-icon?platform=ios&appId=1606521457" },
   { name: "e-Khool LMS", bg: "from-blue-600 to-cyan-500", color: "#3B82F6", description: "Enterprise Offline LMS", icon: "/api/app-icon?platform=ios&appId=6740979534" },
-  { name: "AAEB School", bg: "from-orange-600 to-amber-500", color: "#F59E0B", description: "Accessibility A11y Portal", icon: "/api/app-icon?platform=android&appId=com.aaeb" },
-  { name: "TVET College", bg: "from-green-600 to-emerald-500", color: "#10B981", description: "Vocational Training Hub", icon: "/api/app-icon?platform=android&appId=com.tvetcollege" },
+  { name: "AAEB eSchool", bg: "from-orange-600 to-amber-500", color: "#F59E0B", description: "Accessibility A11y Portal", icon: "/api/app-icon?platform=android&appId=com.aaeb" },
+  { name: "TVET eSchool", bg: "from-green-600 to-emerald-500", color: "#10B981", description: "Vocational Training Hub", icon: "/api/app-icon?platform=android&appId=com.tvetcollege" },
   { name: "Suya Mobiles", bg: "from-red-600 to-rose-500", color: "#F43F5E", description: "Mobile Repair Shop E-comm", icon: "/api/app-icon?platform=android&appId=com.mobifix" },
   { name: "Uniliv Learn", bg: "from-teal-600 to-cyan-700", color: "#0D9488", description: "Student Accommodation Hub", icon: "/api/app-icon?platform=android&appId=com.uniliv" },
   { name: "Magic Billion", bg: "from-violet-600 to-fuchsia-600", color: "#8B5CF6", description: "Ausbildung Training System", icon: "/api/app-icon?platform=android&appId=com.magicbillion" }
@@ -100,7 +100,7 @@ export function Hero() {
           {/* Subtitle */}
           <FadeIn delay={0.3} direction="up">
             <p className="text-md sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-xl leading-relaxed">
-              I am <strong className="text-neutral-900 dark:text-neutral-100">Gowtham</strong>, a Senior Mobile Engineer & Team Lead with <span className="font-semibold text-neutral-900 dark:text-neutral-100">3.7+ years of experience</span>. I build fluid, offline-first iOS, Android, Web, TV, and Desktop solutions at scale, optimized for 60 FPS performance and native bridging.
+              I am <strong className="text-neutral-900 dark:text-neutral-100">Gowtham</strong>, a Mobile Engineer & Team Lead with <span className="font-semibold text-neutral-900 dark:text-neutral-100">3.7+ years of experience</span>. I build fluid, offline-first iOS, Android, Web, TV, and Desktop solutions at scale, optimized for 60 FPS performance and native bridging.
             </p>
           </FadeIn>
 

@@ -97,7 +97,7 @@ export function LiveApps() {
                 </div>
 
                 <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mt-4 leading-relaxed">
-                  Experience Gowtham's React Native implementation. This app features localized interfaces, encrypted offline databases, and optimized API routes built for production.
+                  {activeApp.description}
                 </p>
 
                 {/* Key stats badges */}

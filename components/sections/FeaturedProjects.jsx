@@ -41,11 +41,10 @@ export function FeaturedProjects() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-                activeCategory === cat
-                  ? "bg-neutral-900 dark:bg-neutral-100 border-neutral-900 dark:border-neutral-100 text-white dark:text-neutral-900"
-                  : "bg-neutral-50 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400"
-              }`}
+              className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${activeCategory === cat
+                ? "bg-neutral-900 dark:bg-neutral-100 border-neutral-900 dark:border-neutral-100 text-white dark:text-neutral-900"
+                : "bg-neutral-50 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400"
+                }`}
             >
               {cat}
             </button>
@@ -62,7 +61,7 @@ export function FeaturedProjects() {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500">
                     {project.category}
                   </span>
-                  
+
                   {/* Title */}
                   <h3 className="text-lg font-bold text-neutral-850 dark:text-neutral-100 mt-2 flex items-center gap-2">
                     {project.title}
@@ -128,7 +127,7 @@ export function FeaturedProjects() {
                         const iconUrl = {
                           "MAAZTER": "/api/app-icon?platform=ios&appId=1606521457",
                           "e-Khool LMS": "/api/app-icon?platform=ios&appId=6740979534",
-                          "AAEB School & TVET College": "/api/app-icon?platform=android&appId=com.aaeb",
+                          "AAEB eSchool & TVET eSchool": "/api/app-icon?platform=android&appId=com.aaeb",
                           "Suya Mobiles": "/api/app-icon?platform=android&appId=com.mobifix",
                           "IoT Automation Apps": "/api/app-icon?platform=android&appId=com.mbbswala"
                         }[selectedProject.title];

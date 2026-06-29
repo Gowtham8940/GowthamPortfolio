@@ -28,7 +28,7 @@ const timelineEvents = [
   },
   {
     icon: <FiActivity className="w-5 h-5 text-emerald-500" />,
-    title: "Senior React Native Developer & Lead - Resbee Info Technologies",
+    title: "React Native Developer & Lead - Resbee Info Technologies",
     duration: "Oct 2024 - Present",
     description: "Promoted to lead a mobile team of 4 engineers. Responsible for sprint deliveries, code reviews, and architecting government-scale LMS platforms serving 2M+ users across India and Ethiopia.",
     color: "border-emerald-500/30 dark:border-emerald-500/20 bg-emerald-500/5 text-emerald-550"

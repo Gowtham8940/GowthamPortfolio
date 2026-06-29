@@ -13,10 +13,10 @@ export function Footer() {
         {/* Branding */}
         <div className="flex flex-col items-center md:items-start gap-1">
           <span className="text-md font-bold tracking-tight text-neutral-800 dark:text-neutral-200">
-            Gowtham | Senior React Native Developer
+            Gowtham | React Native Developer
           </span>
           <span className="text-xs text-neutral-500">
-            Building 60FPS high performance mobile applications.
+            Building 60 FPS high-performance mobile applications.
           </span>
         </div>
 
@@ -61,7 +61,6 @@ export function Footer() {
         {/* Copy */}
         <div className="text-xs text-neutral-400 dark:text-neutral-600 font-mono text-center md:text-right">
           <p>© {currentYear} Gowtham. All rights reserved.</p>
-          <p className="mt-1">Built with Next.js 15, Tailwind v4 & Motion.</p>
         </div>
       </div>
     </footer>

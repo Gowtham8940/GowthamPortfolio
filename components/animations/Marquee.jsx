@@ -16,7 +16,7 @@ export function Marquee({
   return (
     <div
       className={cn(
-        "flex overflow-hidden select-none [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
+        "group flex overflow-hidden select-none [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
         className
       )}
       style={{
@@ -28,7 +28,7 @@ export function Marquee({
         className={cn(
           "flex shrink-0 gap-[var(--gap)] min-w-full animate-marquee",
           reverse && "animate-marquee-reverse",
-          pauseOnHover && "hover:[animation-play-state:paused]"
+          pauseOnHover && "group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]"
         )}
         style={{
           animationDuration: "var(--duration)"
@@ -41,7 +41,7 @@ export function Marquee({
         className={cn(
           "flex shrink-0 gap-[var(--gap)] min-w-full animate-marquee",
           reverse && "animate-marquee-reverse",
-          pauseOnHover && "hover:[animation-play-state:paused]"
+          pauseOnHover && "group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]"
         )}
         style={{
           animationDuration: "var(--duration)"

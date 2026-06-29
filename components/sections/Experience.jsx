@@ -24,7 +24,7 @@ export function Experience() {
           {experienceData.map((job, idx) => (
             <div key={job.id} className="relative group">
               {/* Left sidebar date column for desktop */}
-              <div className="hidden md:block absolute -left-[170px] top-1 w-32 text-right">
+              <div className="hidden md:block absolute -left-[196px] top-1 w-32 text-right">
                 <span className="text-xs font-mono font-bold text-neutral-400 dark:text-neutral-500 flex items-center justify-end gap-1.5">
                   <FiCalendar className="w-3.5 h-3.5" />
                   {job.duration.split(" - ")[0]}

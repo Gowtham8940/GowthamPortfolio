@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { certificationsData } from "@/lib/data/certifications";
 import { FadeIn } from "../animations/FadeIn";
-import { FiAward, FiExternalLink, FiFileText, FiShield } from "react-icons/fi";
+import { FiAward, FiShield } from "react-icons/fi";
 import { FaAws } from "react-icons/fa";
 
 const getIssuerLogo = (cert) => {
@@ -91,7 +91,7 @@ export function Certifications() {
                     transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)"
                   }}
                 >
-                  
+
                   {/* Front Side Card */}
                   <div className="absolute inset-0 w-full h-full p-5 rounded-2xl border border-neutral-200 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-950/20 backdrop-blur-sm [backface-visibility:hidden] flex flex-col justify-between hover:border-neutral-300 dark:hover:border-neutral-850">
                     <div>
@@ -129,16 +129,6 @@ export function Certifications() {
                     </div>
 
                     <div className="flex justify-between items-center text-[10px] border-t border-neutral-800 pt-3">
-                      <a
-                        href={cert.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="text-blue-400 font-bold flex items-center gap-0.5 hover:underline"
-                      >
-                        Verification Link
-                        <FiExternalLink />
-                      </a>
                       <span className="text-neutral-400">Back</span>
                     </div>
                   </div>
