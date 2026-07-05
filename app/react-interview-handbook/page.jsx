@@ -1,0 +1,1185 @@
+"use client";
+
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import handbookData from "@/lib/data/handbook.json";
+import {
+  FiSearch, FiTrash2, FiPlay, FiCopy, FiCheck,
+  FiMenu, FiX, FiCheckSquare, FiSquare, FiArrowLeft,
+  FiSun, FiMoon, FiCode, FiEdit3, FiBookOpen
+} from "react-icons/fi";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import hljs from "highlight.js/lib/core";
+import javascript from "highlight.js/lib/languages/javascript";
+import xml from "highlight.js/lib/languages/xml";
+import css from "highlight.js/lib/languages/css";
+import "highlight.js/styles/tokyo-night-dark.css";
+
+hljs.registerLanguage("javascript", javascript);
+hljs.registerLanguage("js", javascript);
+hljs.registerLanguage("jsx", javascript);
+hljs.registerLanguage("html", xml);
+hljs.registerLanguage("xml", xml);
+hljs.registerLanguage("css", css);
+
+/* ─────────────────────────────────────────────
+   CodePlayground — Editable + Runnable code block
+   Approach: contentEditable <code> tag (same as original HTML).
+   Highlight.js applied once on mount. User edits in-place.
+   Run reads innerText from the ref.
+   ───────────────────────────────────────────── */
+function CodePlayground({ code, language }) {
+  const codeRef = useRef(null);
+  const [logs, setLogs] = useState([]);
+  const [error, setError] = useState(null);
+  const [showConsole, setShowConsole] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Apply syntax highlighting on mount
+  useEffect(() => {
+    if (codeRef.current && !isEditing) {
+      codeRef.current.removeAttribute("data-highlighted");
+      codeRef.current.textContent = code;
+      hljs.highlightElement(codeRef.current);
+    }
+  }, [code, isEditing]);
+
+  const getCode = useCallback(() => {
+    return codeRef.current?.innerText || codeRef.current?.textContent || code;
+  }, [code]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(getCode());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+  };
+
+  const handleEdit = () => {
+    if (isEditing) {
+      // Switching back to preview — re-highlight
+      const currentCode = getCode();
+      setIsEditing(false);
+      setTimeout(() => {
+        if (codeRef.current) {
+          codeRef.current.removeAttribute("data-highlighted");
+          codeRef.current.textContent = currentCode;
+          hljs.highlightElement(codeRef.current);
+        }
+      }, 0);
+    } else {
+      // Switching to edit mode — show plain text
+      const currentCode = getCode();
+      setIsEditing(true);
+      setTimeout(() => {
+        if (codeRef.current) {
+          codeRef.current.textContent = currentCode;
+          codeRef.current.focus();
+        }
+      }, 0);
+    }
+  };
+
+  const handleRun = () => {
+    setLogs([]);
+    setError(null);
+    setShowConsole(true);
+
+    const capturedLogs = [];
+    const originalLog = console.log;
+    const originalWarn = console.warn;
+
+    console.log = (...args) => {
+      capturedLogs.push(
+        args
+          .map((a) => {
+            if (typeof a === "object") {
+              try { return JSON.stringify(a, null, 2); } catch { return "[Circular]"; }
+            }
+            return String(a);
+          })
+          .join(" ")
+      );
+    };
+    console.warn = console.log;
+
+    try {
+      const activeCode = getCode();
+      new Function(activeCode)();
+      if (capturedLogs.length === 0) {
+        setLogs(["// Code executed successfully (no console output)."]);
+      } else {
+        setLogs(capturedLogs);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      console.log = originalLog;
+      console.warn = originalWarn;
+    }
+  };
+
+  const isRunnable = ["javascript", "js", "jsx"].includes(language);
+
+  return (
+    <div className="code-playground">
+      {/* Toolbar */}
+      <div className="code-toolbar">
+        <span className="code-lang-label">{language}</span>
+        <div className="code-actions">
+          <button onClick={handleEdit} className="code-action-btn" title={isEditing ? "Preview" : "Edit"}>
+            {isEditing ? <><FiCode size={12} /> Preview</> : <><FiEdit3 size={12} /> Edit</>}
+          </button>
+          <button onClick={handleCopy} className="code-action-btn">
+            {copied ? <><FiCheck size={12} className="text-emerald" /> Copied</> : <><FiCopy size={12} /> Copy</>}
+          </button>
+          {isRunnable && (
+            <button onClick={handleRun} className="code-action-btn run-btn">
+              <FiPlay size={12} /> Run
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Code Block */}
+      <pre className="code-pre" data-lenis-prevent>
+        <code
+          ref={codeRef}
+          contentEditable={isEditing}
+          suppressContentEditableWarning
+          spellCheck="false"
+          className={`language-${language}${isEditing ? " code-editing" : ""}`}
+        >
+          {code}
+        </code>
+      </pre>
+
+      {/* Console */}
+      {showConsole && (
+        <div className="console-wrapper">
+          <div className="console-header">
+            <span>Console Output</span>
+            <button onClick={() => setShowConsole(false)} className="console-clear-btn">Clear</button>
+          </div>
+          {error ? (
+            <pre className="console-output console-error">{`Error: ${error}`}</pre>
+          ) : (
+            <pre className="console-output">{logs.join("\n")}</pre>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const recallTips = [
+  { term: "Scope", definition: "Boundary where a variable can be accessed.", code: "function test() {\n  let age = 24;\n}\n\nage lives inside the function boundary." },
+  { term: "Closure", definition: "Function remembers variables from its outer scope.", code: "const count = 10;\n\nconst print = () => {\n  console.log(count);\n};\n\nprint remembers count." },
+  { term: "Hoisting", definition: "JavaScript scans the code and stores declarations before execution.", code: "sayHello();\n\nfunction sayHello() {}\n\nWorks because JavaScript already knows about sayHello." },
+  { term: "Event Loop", definition: "Manages async tasks and decides when callbacks can run.", code: "setTimeout(() => {}, 1000);" },
+  { term: "Promise", definition: "Placeholder for a future result.", code: "fetchData().then(...)" },
+  { term: "Async/Await", definition: "Cleaner way to write Promise code.", code: "const data = await fetchData();" },
+  { term: "Pure Function", definition: "Same input, same output, no side effects.", code: "function add(a, b) {\n  return a + b;\n}" },
+  { term: "HOC", definition: "Wrapper that adds functionality to a component.", code: "withAuth(HomeScreen)\n\nNowadays mostly replaced by Hooks and Context." },
+  { term: "Context API", definition: "Share data without prop drilling.", code: "const { user } = useContext(AuthContext);" },
+  { term: "Redux", definition: "Central store for application state.", code: "dispatch(addTodo());" },
+  { term: "useMemo", definition: "Remember a calculated value.", code: "const result = useMemo(() => expensiveCalc(), []);" },
+  { term: "useCallback", definition: "Remember a function.", code: "const handleClick = useCallback(() => {}, []);" },
+  { term: "Virtual DOM", definition: "React compares changes before updating the real UI.", code: "" },
+  { term: "FlatList", definition: "Renders only visible items to improve performance.", code: "" }
+];
+
+const rnCheatSheet = [
+  { term: "Promise", definition: "Future Result" },
+  { term: ".then()", definition: "Success" },
+  { term: ".catch()", definition: "Error" },
+  { term: ".finally()", definition: "Always Execute" },
+  { term: "Promise.all()", definition: "Parallel, fail if one fails" },
+  { term: "Promise.allSettled()", definition: "Wait for all" },
+  { term: "Promise.race()", definition: "First completed wins" },
+  { term: "Promise.any()", definition: "First successful wins" },
+  { term: "async/await", definition: "Cleaner Promise syntax" }
+];
+
+/* ─────────────────────────────────────────────
+   Main Handbook Page
+   ───────────────────────────────────────────── */
+export default function Handbook() {
+  const [mounted, setMounted] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [completedQuestions, setCompletedQuestions] = useState(new Set());
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [activeSection, setActiveSection] = useState("");
+  const [showRecall, setShowRecall] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const localStorageKey = "gowtham_react_handbook_progress";
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem(localStorageKey);
+    if (saved) {
+      try {
+        setCompletedQuestions(new Set(JSON.parse(saved)));
+      } catch (e) {
+        console.error("Failed to parse progress", e);
+      }
+    }
+  }, []);
+
+  const saveProgress = (newSet) => {
+    setCompletedQuestions(newSet);
+    localStorage.setItem(localStorageKey, JSON.stringify(Array.from(newSet)));
+  };
+
+  const toggleQuestion = (qId) => {
+    const next = new Set(completedQuestions);
+    next.has(qId) ? next.delete(qId) : next.add(qId);
+    saveProgress(next);
+  };
+
+  const handleResetProgress = () => {
+    if (window.confirm("Reset all study progress?")) saveProgress(new Set());
+  };
+
+  const stats = useMemo(() => {
+    let total = 0;
+    handbookData.forEach((s) => s.difficultyBlocks.forEach((b) => (total += b.questions.length)));
+    return { total, completed: completedQuestions.size, percent: total > 0 ? Math.round((completedQuestions.size / total) * 100) : 0 };
+  }, [completedQuestions]);
+
+  const sectionCounts = useMemo(() => {
+    const c = {};
+    handbookData.forEach((sec) => {
+      let t = 0, d = 0;
+      sec.difficultyBlocks.forEach((b) => b.questions.forEach((q) => { t++; if (completedQuestions.has(q.id)) d++; }));
+      c[sec.id] = { total: t, completed: d };
+    });
+    return c;
+  }, [completedQuestions]);
+
+  const filteredData = useMemo(() => {
+    if (!searchQuery) return handbookData;
+    const q = searchQuery.toLowerCase();
+    return handbookData
+      .map((section) => {
+        if (section.title.toLowerCase().includes(q)) return section;
+        const filtered = section.difficultyBlocks
+          .map((b) => ({
+            ...b,
+            questions: b.questions.filter(
+              (qq) =>
+                qq.text.toLowerCase().includes(q) ||
+                qq.answers.some((a) => (a.type === "text" && a.content.toLowerCase().includes(q)) || (a.type === "code" && a.code.toLowerCase().includes(q)))
+            ),
+          }))
+          .filter((b) => b.questions.length > 0);
+        return filtered.length > 0 ? { ...section, difficultyBlocks: filtered } : null;
+      })
+      .filter(Boolean);
+  }, [searchQuery]);
+
+  // Track active section via IntersectionObserver
+  useEffect(() => {
+    const observers = [];
+    const sectionEls = document.querySelectorAll(".topic-section");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-20% 0px -70% 0px" }
+    );
+    sectionEls.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [filteredData]);
+
+  if (!mounted) return null;
+
+  const diffBadge = {
+    Beginner: "badge-beginner",
+    Intermediate: "badge-intermediate",
+    Advanced: "badge-advanced",
+    Expert: "badge-expert",
+  };
+
+  return (
+    <>
+      <style jsx global>{handbookStyles}</style>
+
+      <div className="handbook-root">
+        {/* ── Sidebar ── */}
+        <aside className={`hb-sidebar ${mobileMenuOpen ? "open" : ""}`}>
+          <div className="sidebar-inner">
+            {/* Back link */}
+            <div className="sidebar-header">
+              <Link href="/" className="back-link"><FiArrowLeft size={14} /> Back to Portfolio</Link>
+              <button onClick={() => setMobileMenuOpen(false)} className="mobile-close-btn"><FiX size={18} /></button>
+            </div>
+
+            {/* Profile */}
+            <div className="sidebar-profile">
+              <div className="profile-avatar">G</div>
+              <div>
+                <h3 className="profile-name">Gowtham Jaganthan</h3>
+                <p className="profile-subtitle">Interview Preparation</p>
+              </div>
+            </div>
+
+            {/* Progress */}
+            <div className="sidebar-progress">
+              <div className="progress-top">
+                <span>Progress</span>
+                <span className="progress-pct">{stats.percent}%</span>
+              </div>
+              <div className="progress-bar-bg">
+                <div className="progress-bar-fill" style={{ width: `${stats.percent}%` }} />
+              </div>
+              <span className="progress-label">{stats.completed} / {stats.total} questions</span>
+            </div>
+
+            {/* Search */}
+            <div className="sidebar-search">
+              <FiSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Search questions..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+            </div>
+
+            {/* Scrollable nav — explicit height so trackpad scroll works */}
+            <div className="sidebar-nav-wrap" data-lenis-prevent>
+              <nav className="sidebar-nav">
+                {handbookData.map((sec) => {
+                  const c = sectionCounts[sec.id] || { completed: 0, total: 0 };
+                  const done = c.completed === c.total && c.total > 0;
+                  const isActive = activeSection === sec.id;
+                  return (
+                    <a
+                      key={sec.id}
+                      href={`#${sec.id}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`nav-link ${done ? "nav-done" : ""} ${isActive ? "nav-active" : ""}`}
+                    >
+                      <span className="nav-link-text">{sec.title}</span>
+                      <span className={`nav-count ${done ? "nav-count-done" : ""}`}>{c.completed}/{c.total}</span>
+                    </a>
+                  );
+                })}
+              </nav>
+            </div>
+          </div>
+
+          {/* Sidebar Footer */}
+          <div className="sidebar-footer">
+            <button onClick={handleResetProgress} className="reset-btn"><FiTrash2 size={14} /> Reset</button>
+            <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="theme-toggle-btn">
+              {theme === "dark" ? <FiSun size={16} /> : <FiMoon size={16} />}
+            </button>
+          </div>
+        </aside>
+
+        {/* Overlay for mobile */}
+        {mobileMenuOpen && <div className="sidebar-overlay" onClick={() => setMobileMenuOpen(false)} />}
+
+        {/* ── Mobile Header ── */}
+        <div className="mobile-header">
+          <button onClick={() => setMobileMenuOpen(true)} className="mobile-menu-btn"><FiMenu size={20} /></button>
+          <span className="mobile-title">React Handbook</span>
+          <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="theme-toggle-btn">
+            {theme === "dark" ? <FiSun size={16} /> : <FiMoon size={16} />}
+          </button>
+        </div>
+
+        {/* ── Main Content ── */}
+        <main className="hb-main">
+          <div className="main-layout">
+            {/* Center content */}
+            <div className="main-inner">
+              {/* Page Title */}
+              <div className="page-header">
+                <h1 className="page-title">React & Frontend Interview Handbook</h1>
+                <p className="page-subtitle">A comprehensive guide with 250+ questions, code playgrounds, and progress tracking.</p>
+              </div>
+
+              {/* ── Architecture Diagrams Dashboard ── */}
+              <div className="mb-8 p-6 rounded-2xl border border-neutral-250 dark:border-neutral-850 bg-white dark:bg-[#0c101a]/30 shadow-sm">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-450 dark:text-neutral-400 mb-4 flex items-center gap-2 select-none">
+                  <FiBookOpen className="text-blue-500" /> React Native Architecture & Cheat Sheet
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div 
+                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
+                    onClick={() => setSelectedImage("/images/new_react_native.jpg")}
+                  >
+                    <div className="p-3 bg-neutral-100 dark:bg-neutral-950/60 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-[10px] uppercase font-bold text-neutral-400 select-none">
+                      <span>The New React Native (Fabric/TurboModules)</span>
+                      <span className="text-[9px] text-blue-500 font-semibold group-hover:underline">Zoom</span>
+                    </div>
+                    <div className="p-2 flex items-center justify-center">
+                      <img src="/images/new_react_native.jpg" alt="New React Native Architecture" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
+                    </div>
+                  </div>
+
+                  <div 
+                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-855 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
+                    onClick={() => setSelectedImage("/images/react_native_arch.jpg")}
+                  >
+                    <div className="p-3 bg-neutral-100 dark:bg-neutral-950/60 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-[10px] uppercase font-bold text-neutral-400 select-none">
+                      <span>React Native JSI & Bridge Layout</span>
+                      <span className="text-[9px] text-blue-500 font-semibold group-hover:underline">Zoom</span>
+                    </div>
+                    <div className="p-2 flex items-center justify-center">
+                      <img src="/images/react_native_arch.jpg" alt="React Native JSI & Bridge Layout" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-center mt-5">
+                  <button 
+                    onClick={() => setShowRecall(!showRecall)} 
+                    className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer text-[11px] uppercase tracking-wider"
+                  >
+                    🚀 {showRecall ? "Hide Recall Cheat Sheet" : "Show Recall Cheat Sheet"}
+                  </button>
+                </div>
+
+                {/* Recall lists expander */}
+                {showRecall && (
+                  <div className="mt-6 pt-6 border-t border-neutral-200 dark:border-neutral-850 space-y-6">
+                    
+                    {/* JavaScript & React Core recall tips */}
+                    <div>
+                      <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-3 border-l-2 border-blue-500 pl-2 select-none">
+                        JavaScript & React Core Concepts Recall
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {recallTips.map((tip, idx) => (
+                          <div key={idx} className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-850 bg-neutral-50/50 dark:bg-neutral-950/10 hover:shadow-sm transition-all duration-200">
+                            <span className="inline-block px-2 py-0.5 rounded-md text-[8px] font-extrabold bg-blue-500/10 text-blue-500 border border-blue-500/15 mb-2 uppercase">
+                              {tip.term}
+                            </span>
+                            <p className="text-[11px] sm:text-xs text-neutral-550 dark:text-neutral-400 font-semibold leading-relaxed mb-2">
+                              {tip.definition}
+                            </p>
+                            {tip.code && (
+                              <pre className="p-2 bg-neutral-100 dark:bg-neutral-950/60 rounded-lg text-[10px] font-mono text-left overflow-x-auto text-neutral-300 border border-neutral-200/50 dark:border-neutral-850/50 select-text whitespace-pre-wrap">
+                                <code>{tip.code}</code>
+                              </pre>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* React Native specific Promise cheat sheet */}
+                    <div>
+                      <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-3 border-l-2 border-indigo-500 pl-2 select-none">
+                        React Native Promise Cheat Sheet
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        {rnCheatSheet.map((tip, idx) => (
+                          <div key={idx} className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-850 bg-neutral-50/30 dark:bg-neutral-950/5 hover:border-indigo-500/20 transition-all duration-200">
+                            <span className="text-[10px] font-bold font-mono text-indigo-550 block mb-1">
+                              {tip.term}
+                            </span>
+                            <span className="text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 block font-medium leading-normal">
+                              = {tip.definition}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+                )}
+              </div>
+
+              {filteredData.length === 0 ? (
+                <div className="empty-state">
+                  <FiSearch size={32} />
+                  <h3>No matches found</h3>
+                  <p>Try a different search term.</p>
+                </div>
+              ) : (
+                <div className="sections-list">
+                  {filteredData.map((section) => (
+                    <section key={section.id} id={section.id} className="topic-section">
+                      <h2 className="topic-title">{section.title}</h2>
+
+                      {section.difficultyBlocks.map((block, bIdx) => (
+                        <div key={bIdx} className="diff-block">
+                          <div className="diff-header">
+                            <span className={`diff-badge ${diffBadge[block.difficulty] || ""}`}>{block.difficulty}</span>
+                            <div className="diff-line" />
+                          </div>
+
+                          <div className="questions-list">
+                            {block.questions.map((q) => {
+                              const done = completedQuestions.has(q.id);
+                              return (
+                                <div key={q.id} className={`question-card ${done ? "question-done" : ""}`}>
+                                  <div className="question-header">
+                                    <button onClick={() => toggleQuestion(q.id)} className={`q-check ${done ? "q-check-done" : ""}`}>
+                                      {done ? <FiCheckSquare size={18} /> : <FiSquare size={18} />}
+                                    </button>
+                                    <div className="q-text-wrap">
+                                      <span className="q-label">Q.</span>
+                                      <span className={`q-text ${done ? "q-text-done" : ""}`} dangerouslySetInnerHTML={{ __html: q.text }} />
+                                    </div>
+                                  </div>
+
+                                  <div className="answers-list">
+                                    {q.answers.map((ans, aIdx) => {
+                                      if (ans.type === "code") {
+                                        return <CodePlayground key={aIdx} code={ans.code} language={ans.language} />;
+                                      }
+                                      return (
+                                        <div key={aIdx} className="answer-text" dangerouslySetInnerHTML={{ __html: ans.content }} />
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </section>
+                  ))}
+                </div>
+              )}
+
+              <footer className="hb-footer">
+                <p>Built by Gowtham — For personal interview preparation only.</p>
+              </footer>
+            </div>
+
+            {/* ── Right Side TOC ── */}
+            <aside className="right-toc" data-lenis-prevent>
+              <div className="toc-header">
+                <FiBookOpen size={14} />
+                <span>On This Page</span>
+              </div>
+              <nav className="toc-nav">
+                {filteredData.map((sec) => (
+                  <a
+                    key={sec.id}
+                    href={`#${sec.id}`}
+                    className={`toc-link ${activeSection === sec.id ? "toc-active" : ""}`}
+                  >
+                    {sec.title}
+                  </a>
+                ))}
+              </nav>
+            </aside>
+          </div>
+        </main>
+      </div>
+
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img src={selectedImage} alt="Zoomed View" className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl animate-scaleUp" />
+          <button className="absolute top-6 right-6 text-white hover:text-neutral-300 p-2 cursor-pointer bg-neutral-800/50 hover:bg-neutral-800/80 rounded-full transition-colors">
+            <FiX size={20} />
+          </button>
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   All styles in a single template literal
+   ───────────────────────────────────────────── */
+const handbookStyles = `
+  /* ── Variables ── */
+  .handbook-root {
+    --hb-bg: #fafafa;
+    --hb-bg-card: #ffffff;
+    --hb-bg-sidebar: #ffffff;
+    --hb-bg-code: #0d1117;
+    --hb-text: #1a1a2e;
+    --hb-text-secondary: #64748b;
+    --hb-text-muted: #94a3b8;
+    --hb-border: #e2e8f0;
+    --hb-border-light: #f1f5f9;
+    --hb-accent: #3b82f6;
+    --hb-accent-glow: rgba(59,130,246,0.08);
+    --hb-green: #10b981;
+    --hb-red: #f43f5e;
+    --hb-sidebar-w: 300px;
+    --hb-font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    --hb-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", "SF Mono", Consolas, monospace;
+  }
+
+  :root[class~="dark"] .handbook-root,
+  .dark .handbook-root {
+    --hb-bg: #070b12;
+    --hb-bg-card: #0f1419;
+    --hb-bg-sidebar: #0b0f18;
+    --hb-bg-code: #010409;
+    --hb-text: #e2e8f0;
+    --hb-text-secondary: #94a3b8;
+    --hb-text-muted: #475569;
+    --hb-border: #1e293b;
+    --hb-border-light: #151d2e;
+    --hb-accent: #60a5fa;
+    --hb-accent-glow: rgba(96,165,250,0.06);
+  }
+
+  /* ── Root ── */
+  .handbook-root {
+    display: flex;
+    min-height: 100vh;
+    background: var(--hb-bg);
+    color: var(--hb-text);
+    font-family: var(--hb-font);
+    scroll-behavior: smooth;
+  }
+
+  .handbook-root *, .handbook-root *::before, .handbook-root *::after {
+    box-sizing: border-box;
+  }
+
+  /* ── Sidebar ── */
+  .hb-sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--hb-sidebar-w);
+    background: var(--hb-bg-sidebar);
+    border-right: 1px solid var(--hb-border);
+    z-index: 50;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-inner {
+    padding: 24px 20px 0;
+  }
+
+  /* The nav wrapper gets explicit max-height so it ALWAYS scrolls */
+  .sidebar-nav-wrap {
+    max-height: calc(100vh - 420px);
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--hb-border) transparent;
+    margin: 0 -8px;
+    padding: 0 8px;
+  }
+
+  .sidebar-nav-wrap::-webkit-scrollbar { width: 4px; }
+  .sidebar-nav-wrap::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-nav-wrap::-webkit-scrollbar-thumb { background: var(--hb-border); border-radius: 4px; }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-bottom: 12px;
+  }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--hb-border);
+  }
+
+  .back-link {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; font-weight: 600;
+    color: var(--hb-accent);
+    text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .mobile-close-btn {
+    display: none;
+    background: none; border: none; cursor: pointer;
+    color: var(--hb-text-secondary);
+    padding: 4px;
+  }
+
+  .sidebar-profile {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .profile-avatar {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #fff; font-size: 1rem;
+    font-family: var(--hb-font-mono);
+    box-shadow: 0 4px 12px rgba(59,130,246,0.25);
+  }
+
+  .profile-name { font-size: 0.85rem; font-weight: 700; margin: 0; }
+  .profile-subtitle { font-size: 0.65rem; font-weight: 600; color: var(--hb-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 2px 0 0; }
+
+  /* Progress */
+  .sidebar-progress {
+    padding: 14px 16px; border-radius: 14px;
+    border: 1px solid var(--hb-border);
+    background: var(--hb-accent-glow);
+    margin-bottom: 20px;
+  }
+  .progress-top { display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 700; margin-bottom: 8px; color: var(--hb-text-secondary); }
+  .progress-pct { color: var(--hb-accent); }
+  .progress-bar-bg { height: 6px; border-radius: 6px; background: var(--hb-border); overflow: hidden; margin-bottom: 6px; }
+  .progress-bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #3b82f6, #6366f1); transition: width 0.4s ease; }
+  .progress-label { font-size: 0.65rem; color: var(--hb-text-muted); font-weight: 600; }
+
+  /* Search */
+  .sidebar-search { position: relative; margin-bottom: 20px; }
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--hb-text-muted); width: 15px; height: 15px; }
+  .search-input {
+    width: 100%; padding: 10px 14px 10px 36px;
+    border-radius: 12px; border: 1px solid var(--hb-border);
+    background: var(--hb-bg); color: var(--hb-text);
+    font-size: 0.78rem; outline: none;
+    font-family: var(--hb-font);
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--hb-accent); }
+  .search-input::placeholder { color: var(--hb-text-muted); }
+
+  /* Nav link styles */
+
+  .nav-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; border-radius: 10px;
+    font-size: 0.78rem; font-weight: 500;
+    color: var(--hb-text-secondary);
+    text-decoration: none;
+    transition: all 0.15s;
+    gap: 8px;
+  }
+  .nav-link:hover { background: var(--hb-accent-glow); color: var(--hb-accent); }
+  .nav-link.nav-active { background: var(--hb-accent-glow); color: var(--hb-accent); font-weight: 600; border-left: 2px solid var(--hb-accent); border-radius: 0 10px 10px 0; padding-left: 10px; }
+  .nav-link.nav-done { opacity: 0.55; }
+
+  .nav-link-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+
+  .nav-count {
+    flex-shrink: 0;
+    padding: 2px 8px; border-radius: 20px;
+    font-size: 0.65rem; font-weight: 700;
+    border: 1px solid var(--hb-border);
+    background: var(--hb-bg);
+    color: var(--hb-text-muted);
+  }
+  .nav-count-done { background: rgba(16,185,129,0.08); color: var(--hb-green); border-color: rgba(16,185,129,0.2); }
+
+  /* Sidebar Footer */
+  .sidebar-footer {
+    flex-shrink: 0;
+    padding: 16px 20px;
+    border-top: 1px solid var(--hb-border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .reset-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: none; border: none; cursor: pointer;
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--hb-red); padding: 6px 10px; border-radius: 10px;
+    font-family: var(--hb-font);
+    transition: background 0.2s;
+  }
+  .reset-btn:hover { background: rgba(244,63,94,0.06); }
+
+  .theme-toggle-btn {
+    background: none; border: 1px solid var(--hb-border); cursor: pointer;
+    padding: 8px; border-radius: 10px;
+    color: var(--hb-text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .theme-toggle-btn:hover { border-color: var(--hb-accent); color: var(--hb-accent); }
+
+  /* ── Mobile ── */
+  .mobile-header {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 56px; z-index: 40;
+    background: var(--hb-bg-sidebar);
+    border-bottom: 1px solid var(--hb-border);
+    padding: 0 20px;
+    align-items: center; justify-content: space-between;
+  }
+
+  .mobile-menu-btn {
+    background: none; border: 1px solid var(--hb-border); cursor: pointer;
+    padding: 6px; border-radius: 8px; color: var(--hb-text-secondary);
+    display: flex; align-items: center;
+  }
+
+  .mobile-title { font-size: 0.8rem; font-weight: 700; font-family: var(--hb-font-mono); }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 45;
+  }
+
+  @media (max-width: 768px) {
+    .hb-sidebar { transform: translateX(-100%); width: 85vw; max-width: 340px; }
+    .hb-sidebar.open { transform: translateX(0); box-shadow: 8px 0 30px rgba(0,0,0,0.3); }
+    .sidebar-overlay { display: block; }
+    .mobile-close-btn { display: flex; }
+    .mobile-header { display: flex; }
+    .hb-main { padding-left: 0; padding-top: 56px; }
+  }
+
+  /* ── Main ── */
+  .hb-main {
+    flex: 1;
+    padding-left: var(--hb-sidebar-w);
+    min-height: 100vh;
+  }
+
+  .main-layout {
+    display: flex;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .main-inner {
+    flex: 1;
+    min-width: 0;
+    padding: 48px 32px 80px;
+  }
+
+  /* ── Right TOC ── */
+  .right-toc {
+    position: sticky;
+    top: 32px;
+    width: 220px;
+    flex-shrink: 0;
+    padding: 24px 0 24px 16px;
+    border-left: 1px solid var(--hb-border);
+    margin-top: 48px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--hb-border) transparent;
+  }
+
+  .right-toc::-webkit-scrollbar { width: 3px; }
+  .right-toc::-webkit-scrollbar-track { background: transparent; }
+  .right-toc::-webkit-scrollbar-thumb { background: var(--hb-border); border-radius: 3px; }
+
+  .toc-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--hb-text-muted);
+    margin-bottom: 12px;
+    padding-left: 12px;
+  }
+
+  .toc-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .toc-link {
+    display: block;
+    padding: 5px 12px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--hb-text-muted);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .toc-link:hover {
+    color: var(--hb-accent);
+  }
+  .toc-link.toc-active {
+    color: var(--hb-accent);
+    border-left-color: var(--hb-accent);
+    font-weight: 600;
+    background: var(--hb-accent-glow);
+  }
+
+  @media (max-width: 1100px) {
+    .right-toc { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    .main-inner { padding: 24px 16px 60px; }
+  }
+
+  /* Page Header */
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--hb-border);
+  }
+
+  .page-title {
+    font-size: 1.8rem; font-weight: 800;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+
+  .page-subtitle { font-size: 0.9rem; color: var(--hb-text-secondary); margin: 0; line-height: 1.5; }
+
+  @media (max-width: 768px) {
+    .page-title { font-size: 1.3rem; }
+    .page-subtitle { font-size: 0.8rem; }
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center; padding: 80px 0;
+    color: var(--hb-text-muted);
+  }
+  .empty-state h3 { font-size: 0.9rem; font-weight: 700; margin: 12px 0 4px; color: var(--hb-text-secondary); }
+  .empty-state p { font-size: 0.8rem; }
+
+  /* Sections */
+  .sections-list { display: flex; flex-direction: column; gap: 48px; }
+
+  .topic-section { scroll-margin-top: 80px; }
+
+  .topic-title {
+    font-size: 1.3rem; font-weight: 800;
+    margin: 0 0 24px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--hb-border-light);
+    color: var(--hb-text);
+  }
+
+  /* Difficulty Blocks */
+  .diff-block { margin-bottom: 32px; }
+
+  .diff-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .diff-badge {
+    padding: 3px 12px; border-radius: 20px;
+    font-size: 0.65rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .badge-beginner { background: rgba(16,185,129,0.08); color: #10b981; border-color: rgba(16,185,129,0.2); }
+  .badge-intermediate { background: rgba(59,130,246,0.08); color: #3b82f6; border-color: rgba(59,130,246,0.2); }
+  .badge-advanced { background: rgba(245,158,11,0.08); color: #f59e0b; border-color: rgba(245,158,11,0.2); }
+  .badge-expert { background: rgba(244,63,94,0.08); color: #f43f5e; border-color: rgba(244,63,94,0.2); }
+  .diff-line { flex: 1; height: 1px; background: var(--hb-border); }
+
+  /* Questions */
+  .questions-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .question-card {
+    padding: 20px 24px;
+    border-radius: 16px;
+    border: 1px solid var(--hb-border);
+    background: var(--hb-bg-card);
+    transition: all 0.2s;
+  }
+  .question-card:hover { border-color: color-mix(in srgb, var(--hb-accent) 30%, var(--hb-border)); }
+  .question-card.question-done { opacity: 0.6; border-color: rgba(16,185,129,0.25); }
+
+  .question-header { display: flex; align-items: flex-start; gap: 12px; }
+
+  .q-check {
+    background: none; border: none; cursor: pointer;
+    color: var(--hb-text-muted); padding: 2px; margin-top: 1px;
+    flex-shrink: 0; transition: color 0.2s;
+  }
+  .q-check:hover { color: var(--hb-accent); }
+  .q-check-done { color: var(--hb-green) !important; }
+
+  .q-text-wrap { font-size: 0.9rem; font-weight: 600; line-height: 1.5; }
+  .q-label { color: var(--hb-text-muted); margin-right: 6px; font-family: var(--hb-font-mono); font-size: 0.8rem; }
+  .q-text-done { text-decoration: line-through; color: var(--hb-text-muted); }
+
+  /* Inline code in questions/answers */
+  .question-card code {
+    font-family: var(--hb-font-mono);
+    background: var(--hb-accent-glow);
+    color: #e879a0;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    border: 1px solid var(--hb-border);
+  }
+
+  .dark .question-card code {
+    color: #f0abfc;
+  }
+
+  .answers-list {
+    margin-top: 14px;
+    padding-left: 36px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .answer-text {
+    font-size: 0.85rem;
+    color: var(--hb-text-secondary);
+    line-height: 1.65;
+    list-style-type: disc;
+    display: list-item;
+  }
+
+  /* ── Code Playground ── */
+  .code-playground {
+    margin: 12px 0 4px;
+    border-radius: 14px;
+    border: 1px solid var(--hb-border);
+    overflow: hidden;
+    background: var(--hb-bg-code);
+  }
+
+  .code-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 14px;
+    background: color-mix(in srgb, var(--hb-bg-code) 90%, var(--hb-border));
+    border-bottom: 1px solid var(--hb-border);
+  }
+
+  .code-lang-label {
+    font-size: 0.65rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--hb-text-muted);
+    font-family: var(--hb-font);
+  }
+
+  .code-actions { display: flex; gap: 4px; }
+
+  .code-action-btn {
+    display: flex; align-items: center; gap: 4px;
+    background: none; border: 1px solid var(--hb-border);
+    color: var(--hb-text-muted);
+    padding: 4px 10px; border-radius: 7px;
+    cursor: pointer; font-size: 0.7rem; font-weight: 600;
+    font-family: var(--hb-font);
+    transition: all 0.15s;
+  }
+  .code-action-btn:hover { color: #e2e8f0; border-color: var(--hb-accent); background: var(--hb-accent-glow); }
+
+  .run-btn { color: var(--hb-green); border-color: rgba(16,185,129,0.3); }
+  .run-btn:hover { background: rgba(16,185,129,0.08); border-color: var(--hb-green); }
+
+  .text-emerald { color: var(--hb-green); }
+
+  .code-pre {
+    margin: 0;
+    padding: 16px 20px;
+    overflow-x: auto;
+    background: var(--hb-bg-code);
+  }
+
+  .code-pre code {
+    font-family: var(--hb-font-mono) !important;
+    font-size: 0.85rem !important;
+    line-height: 1.65 !important;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    color: #e2e8f0 !important;
+    display: block;
+    white-space: pre;
+    tab-size: 2;
+  }
+
+  .code-pre code.code-editing {
+    outline: none;
+    cursor: text;
+    caret-color: #60a5fa;
+    background: rgba(30,41,59,0.3) !important;
+    border-radius: 4px !important;
+    padding: 4px !important;
+  }
+
+  /* Override hljs background */
+  .code-pre code.hljs {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  /* Console */
+  .console-wrapper {
+    border-top: 1px solid var(--hb-border);
+    padding: 12px 16px;
+    background: #020617;
+  }
+
+  .console-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .console-header span {
+    font-size: 0.65rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    color: #475569;
+  }
+  .console-clear-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 0.65rem; font-weight: 600; color: #475569;
+    font-family: var(--hb-font);
+    transition: color 0.2s;
+  }
+  .console-clear-btn:hover { color: #94a3b8; }
+
+  .console-output {
+    font-family: var(--hb-font-mono);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--hb-green);
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .console-error { color: var(--hb-red) !important; }
+
+  /* Footer */
+  .hb-footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--hb-border);
+    text-align: center;
+  }
+  .hb-footer p { font-size: 0.8rem; color: var(--hb-text-muted); }
+`;

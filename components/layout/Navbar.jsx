@@ -10,6 +10,7 @@ export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -21,10 +22,31 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (clickCount > 0) {
+      const timer = setTimeout(() => {
+        setClickCount(0);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [clickCount]);
+
   if (!mounted) return null;
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const handleNameClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setClickCount((prev) => {
+      const next = prev + 1;
+      if (next === 3) {
+        window.open("/react-interview-handbook", "_blank");
+        return 0;
+      }
+      return next;
+    });
   };
 
   return (
@@ -37,9 +59,12 @@ export function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <a href="#hero" className="text-xl font-bold tracking-tight text-neutral-800 dark:text-neutral-100 flex items-center gap-2">
+        <button
+          onClick={handleNameClick}
+          className="text-xl font-bold tracking-tight text-neutral-800 dark:text-neutral-100 flex items-center gap-2 cursor-pointer bg-transparent border-none p-0 outline-none select-none"
+        >
           GOWTHAM<span className="text-blue-500 font-mono text-[10px] bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">RN.DEV</span>
-        </a>
+        </button>
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
