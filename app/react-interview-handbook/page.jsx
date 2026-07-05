@@ -177,20 +177,36 @@ function CodePlayground({ code, language }) {
 }
 
 const recallTips = [
-  { term: "Scope", definition: "Boundary where a variable can be accessed.", code: "function test() {\n  let age = 24;\n}\n\nage lives inside the function boundary." },
-  { term: "Closure", definition: "Function remembers variables from its outer scope.", code: "const count = 10;\n\nconst print = () => {\n  console.log(count);\n};\n\nprint remembers count." },
-  { term: "Hoisting", definition: "JavaScript scans the code and stores declarations before execution.", code: "sayHello();\n\nfunction sayHello() {}\n\nWorks because JavaScript already knows about sayHello." },
-  { term: "Event Loop", definition: "Manages async tasks and decides when callbacks can run.", code: "setTimeout(() => {}, 1000);" },
-  { term: "Promise", definition: "Placeholder for a future result.", code: "fetchData().then(...)" },
-  { term: "Async/Await", definition: "Cleaner way to write Promise code.", code: "const data = await fetchData();" },
-  { term: "Pure Function", definition: "Same input, same output, no side effects.", code: "function add(a, b) {\n  return a + b;\n}" },
-  { term: "HOC", definition: "Wrapper that adds functionality to a component.", code: "withAuth(HomeScreen)\n\nNowadays mostly replaced by Hooks and Context." },
-  { term: "Context API", definition: "Share data without prop drilling.", code: "const { user } = useContext(AuthContext);" },
-  { term: "Redux", definition: "Central store for application state.", code: "dispatch(addTodo());" },
-  { term: "useMemo", definition: "Remember a calculated value.", code: "const result = useMemo(() => expensiveCalc(), []);" },
-  { term: "useCallback", definition: "Remember a function.", code: "const handleClick = useCallback(() => {}, []);" },
-  { term: "Virtual DOM", definition: "React compares changes before updating the real UI.", code: "" },
-  { term: "FlatList", definition: "Renders only visible items to improve performance.", code: "" }
+  { term: "Execution Context & Call Stack", definition: "Boundary and steps through which JavaScript compiles and executes code line-by-line using Memory Creation and Code Execution phases managed by a LIFO Stack.", code: "function first() { second(); }\nfunction second() { console.log(\"running\"); }\nfirst(); // Call Stack: Global -> firstContext -> secondContext" },
+  { term: "Hoisting", definition: "JavaScript allocates memory for variables and functions during compilation. 'var' is hoisted as undefined; 'let' and 'const' are hoisted into the Temporal Dead Zone (TDZ); function declarations are hoisted completely.", code: "console.log(a); // undefined\n// console.log(b); // ReferenceError (TDZ)\nvar a = 1; let b = 2;" },
+  { term: "Closures", definition: "A nested function that retains reference bindings to its outer lexical scope variables even after the outer scope has returned or finished executing.", code: "function makeCounter() {\n  let count = 0;\n  return () => ++count;\n}\nconst counter = makeCounter();\nconsole.log(counter()); // 1" },
+  { term: "Event Loop & Concurrency Model", definition: "Single-threaded orchestrator prioritizing call stack clearance before draining the Microtask queue (Promises) and processing Macrotask callbacks (setTimeout).", code: "console.log(\"Start\");\nsetTimeout(() => console.log(\"Macrotask\"), 0);\nPromise.resolve().then(() => console.log(\"Microtask\"));\nconsole.log(\"End\"); // Output: Start -> End -> Microtask -> Macrotask" },
+  { term: "Promises & async/await", definition: "Placeholder object representing eventual async task success or failure. async/await is modern syntax built on top of Promise chains that uses try/catch blocks for error handling.", code: "const fetchData = () => Promise.resolve(\"data\");\nasync function run() {\n  try {\n    const res = await fetchData();\n    console.log(res);\n  } catch(err) { console.error(err); }\n}" },
+  { term: "this keyword", definition: "Refers to the context object executing the function. Set by invocation style: implicit (method call), explicit (call/apply/bind), default (window/undefined), or lexical (Arrows).", code: "const obj = {\n  name: \"Gowtham\",\n  normal() { console.log(this.name); }, // Gowtham\n  arrow: () => { console.log(this.name); } // undefined (inherits lexical window)\n};" },
+  { term: "Prototypes & Inheritance", definition: "Objects share functionality through a linked prototypal chain (__proto__) referring upwards to parents until null is reached.", code: "const animal = { eats: true };\nconst rabbit = Object.create(animal);\nconsole.log(rabbit.eats); // true" },
+  { term: "Scope (var, let, const)", definition: "Visibility limits of identifiers. 'var' is function-scoped and permits redeclarations. 'let' and 'const' are block-scoped ({}) and restrict redeclarations.", code: "if (true) {\n  var x = 10;\n  let y = 20;\n}\nconsole.log(x); // 10\n// console.log(y); // ReferenceError (let y block isolated)" },
+  { term: "Functions as First-Class Citizens", definition: "Functions behave like normal variables. They can be stored in keys, passed as arguments (callbacks), and returned from outer scopes (Higher-Order Functions).", code: "const execute = (cb) => cb();\nexecute(() => console.log(\"Invoked callback\"));" },
+  { term: "Currying & Partial Application", definition: "Currying transforms a multi-argument function into a nested chain of single-argument functions. Partial application pre-binds some arguments returning a lower-arity target.", code: "const curriedAdd = a => b => a + b;\nconst addFive = curriedAdd(5);\nconsole.log(addFive(3)); // 8" },
+  { term: "Debounce & Throttle", definition: "Debounce triggers execution only after an idle period. Throttle enforces execution maximum rate once per specified window (scroll, resizing).", code: "const debounce = (func, delay) => {\n  let timer;\n  return (...args) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => func(...args), delay);\n  };\n};" },
+  { term: "Modules (CommonJS vs ESM)", definition: "CommonJS compiles at runtime dynamically using require/exports. ESM compiles statically at compile time enabling imports/exports and tree-shaking dead code elimination.", code: "// CommonJS: const lib = require('lib'); module.exports = {}\n// ESM: import { lib } from 'lib'; export const val = 1;" },
+  { term: "Type Coercion & Equality", definition: "Implicit conversion of values. Loose equality (==) coerces types, leading to hidden bugs. Strict equality (===) compares values and types strictly.", code: "console.log(\"5\" == 5);  // true (type coerced)\nconsole.log(\"5\" === 5); // false (strict comparison)" },
+  { term: "Array & Object Methods", definition: "Standard array mutations (map for transformation, filter for condition checking, reduce for accumulations) and unpacking via destructuring.", code: "const items = [1, 2, 3];\nconst doubled = items.map(x => x * 2);\nconst [first, ...rest] = items; // destructuring" },
+  { term: "Spread & Rest Operators", definition: "Spread (...) expands arrays or objects. Rest (...) collects multiple parameters or arguments inside a single container array.", code: "const numbers = [1, 2];\nconst clone = [...numbers, 3]; // Spread\nconst sum = (...args) => args.reduce((a, b) => a + b); // Rest" },
+  { term: "Error Handling", definition: "Robust handling of sync errors using try/catch/finally scopes, and async rejection catching via promise reject catch chains or awaited try-blocks.", code: "try {\n  throw new Error(\"custom error\");\n} catch (err) {\n  console.warn(err.message);\n}" },
+  { term: "DOM & Event Delegation", definition: "Attaching a single event listener to a common ancestor parent target rather than attaching event listeners to multiple child nodes.", code: "parentEl.addEventListener(\"click\", (e) => {\n  if (e.target.matches(\".child\")) {\n    console.log(\"Child item clicked:\", e.target);\n  }\n});" },
+  { term: "Garbage Collection & Memory Leaks", definition: "Mark-and-sweep system reclaims unreachable allocations. Leaks stem from uncleaned setIntervals, global variables, or long-living closures.", code: "let cache = new WeakMap();\nlet key = { id: 1 };\ncache.set(key, \"weak ref data\");\nkey = null; // Key garbage collected automatically" },
+  { term: "ES6+ Features", definition: "Recent JavaScript expansions simplifying layouts such as template literals, arrow functions, destructuring, class constructs, and promise APIs.", code: "const greet = (name = \"User\") => `Hi ${name}`;" },
+  { term: "Performance & Big-O Basics", definition: "Measure of time or space complexity. Poor implementations like O(n²) operations inside React loop cycles block UI threads and degrade frame rates.", code: "// O(1) - Constant: const get = (arr) => arr[0];\n// O(n) - Linear: const find = (arr, v) => arr.includes(v);" },
+  { term: "Event Propagation (Capture vs Bubble)", definition: "Capturing flows down from root to target. Target triggers handler. Bubbling propagates back up from target to root. Stopped using stopPropagation().", code: "el.addEventListener(\"click\", cb, true); // Captures phase\nel.addEventListener(\"click\", cb, false); // Bubbling (default)" },
+  { term: "Shallow vs Deep Copy", definition: "Shallow copies transfer reference pointers (nested structures remain shared). Deep copies duplicate nested properties recursively.", code: "const original = { a: { b: 1 } };\nconst shallow = { ...original };\nconst deep = structuredClone(original); // Safe deep clone" },
+  { term: "Object.defineProperty & Property Descriptors", definition: "Configures exact property attributes such as value, writable (modifiable value), enumerable (visible in loops), and configurable (modifiable metadata).", code: "const user = {};\nObject.defineProperty(user, \"id\", {\n  value: 101,\n  writable: false,\n  enumerable: true\n});" },
+  { term: "Generators & Iterators", definition: "Generators are functions defined with function* that return Iterator controllers capable of yielding execution mid-function and resuming later.", code: "function* yieldSteps() {\n  yield 1;\n  yield 2;\n}\nconst it = yieldSteps();\nconsole.log(it.next().value); // 1" },
+  { term: "Symbols & Well-Known Symbols", definition: "Unique primitive values used as non-overlapping property keys. Well-Known Symbols configure internal engine loops (like Symbol.iterator).", code: "const key = Symbol(\"id\");\nconst user = { [key]: \"secret\" };\nconsole.log(user[key]); // \"secret\"" },
+  { term: "Set, Map, WeakSet, WeakMap", definition: "Set collects unique values. Map stores key-value pairs (allows any key type). WeakSet/WeakMap store weak references to objects, allowing garbage collection.", code: "const activeUsers = new Set();\nconst cache = new WeakMap();" },
+  { term: "Optional Chaining & Nullish Coalescing", definition: "Optional Chaining (?.) short-circuits to undefined if target is nullish. Nullish Coalescing (??) provides fallback values strictly for null/undefined.", code: "const age = user.profile?.age ?? 18; // falls back strictly on nullish" },
+  { term: "Immutability & Object.freeze/seal", definition: "Object.freeze prevents all mutations, additions, or configurations. Object.seal restricts additions and configurations but permits editing values.", code: "const state = Object.freeze({ count: 0 });\nstate.count = 5; // Ignored silently or throws in strict mode" },
+  { term: "Polyfills & Transpilation", definition: "Transpilation compiles modern code into older ES syntax equivalent (Babel). Polyfills implement missing library APIs or prototypes dynamically.", code: "// Transpiled Arrow function:\n// (x) => x * x  ==>  function(x) { return x * x; }" },
+  { term: "Security in JS", definition: "Preventing client attacks by sanitizing template data (blocking XSS), configuring strict Content Security Policies (CSP), and avoiding eval().", code: "const sanitize = (str) => str.replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\");" }
 ];
 
 const rnCheatSheet = [
@@ -217,6 +233,7 @@ export default function Handbook() {
   const [activeSection, setActiveSection] = useState("");
   const [showRecall, setShowRecall] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [recallTab, setRecallTab] = useState("core");
 
   const localStorageKey = "gowtham_react_handbook_progress";
 
@@ -445,7 +462,6 @@ export default function Handbook() {
                     </div>
                   </div>
                 </div>
-
                 <div className="flex justify-center mt-5">
                   <button 
                     onClick={() => setShowRecall(!showRecall)} 
@@ -458,49 +474,155 @@ export default function Handbook() {
                 {/* Recall lists expander */}
                 {showRecall && (
                   <div className="mt-6 pt-6 border-t border-neutral-200 dark:border-neutral-850 space-y-6">
-                    
-                    {/* JavaScript & React Core recall tips */}
-                    <div>
-                      <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-3 border-l-2 border-blue-500 pl-2 select-none">
-                        JavaScript & React Core Concepts Recall
-                      </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Tab Navigation */}
+                    <div className="flex flex-wrap gap-2 pb-4 border-b border-neutral-200/60 dark:border-neutral-800/60 select-none">
+                      <button
+                        onClick={() => setRecallTab("core")}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${recallTab === "core" ? "bg-blue-500 text-white shadow-sm" : "bg-neutral-100 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"}`}
+                      >
+                        🚀 JS & React Core (30)
+                      </button>
+                      <button
+                        onClick={() => setRecallTab("native")}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${recallTab === "native" ? "bg-indigo-500 text-white shadow-sm" : "bg-neutral-100 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"}`}
+                      >
+                        📱 React Native Promises (9)
+                      </button>
+                      <button
+                        onClick={() => setRecallTab("daily")}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${recallTab === "daily" ? "bg-emerald-500 text-white shadow-sm" : "bg-neutral-100 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"}`}
+                      >
+                        📅 Daily Reminders & Types
+                      </button>
+                    </div>
+
+                    {/* Tab 1: JS & React Core */}
+                    {recallTab === "core" && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {recallTips.map((tip, idx) => (
-                          <div key={idx} className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-850 bg-neutral-50/50 dark:bg-neutral-950/10 hover:shadow-sm transition-all duration-200">
-                            <span className="inline-block px-2 py-0.5 rounded-md text-[8px] font-extrabold bg-blue-500/10 text-blue-500 border border-blue-500/15 mb-2 uppercase">
-                              {tip.term}
-                            </span>
-                            <p className="text-[11px] sm:text-xs text-neutral-550 dark:text-neutral-400 font-semibold leading-relaxed mb-2">
-                              {tip.definition}
-                            </p>
+                          <div key={idx} className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/20 hover:border-blue-500/30 dark:hover:border-blue-500/20 transition-all duration-300 shadow-sm flex flex-col justify-between group">
+                            <div>
+                              <div className="flex items-center gap-2 mb-2.5 select-none">
+                                <span className="w-1.5 h-3.5 rounded-full bg-blue-500" />
+                                <h4 className="text-xs sm:text-sm font-bold text-neutral-850 dark:text-neutral-100">{tip.term}</h4>
+                              </div>
+                              <p className="text-xs sm:text-sm text-neutral-550 dark:text-neutral-400 leading-relaxed mb-4">
+                                {tip.definition}
+                              </p>
+                            </div>
                             {tip.code && (
-                              <pre className="p-2 bg-neutral-100 dark:bg-neutral-950/60 rounded-lg text-[10px] font-mono text-left overflow-x-auto text-neutral-300 border border-neutral-200/50 dark:border-neutral-850/50 select-text whitespace-pre-wrap">
-                                <code>{tip.code}</code>
+                              <pre className="p-3 bg-neutral-950 text-neutral-200 rounded-xl text-[11px] sm:text-xs font-mono text-left overflow-x-auto border border-neutral-900 select-text whitespace-pre-wrap leading-relaxed select-text">
+                                <code className="text-[#9ece6a]">{tip.code}</code>
                               </pre>
                             )}
                           </div>
                         ))}
                       </div>
-                    </div>
+                    )}
 
-                    {/* React Native specific Promise cheat sheet */}
-                    <div>
-                      <h4 className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 mb-3 border-l-2 border-indigo-500 pl-2 select-none">
-                        React Native Promise Cheat Sheet
-                      </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {/* Tab 2: React Native Promises */}
+                    {recallTab === "native" && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {rnCheatSheet.map((tip, idx) => (
-                          <div key={idx} className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-850 bg-neutral-50/30 dark:bg-neutral-950/5 hover:border-indigo-500/20 transition-all duration-200">
-                            <span className="text-[10px] font-bold font-mono text-indigo-550 block mb-1">
-                              {tip.term}
-                            </span>
-                            <span className="text-[11px] sm:text-xs text-neutral-500 dark:text-neutral-400 block font-medium leading-normal">
-                              = {tip.definition}
-                            </span>
+                          <div key={idx} className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/20 hover:border-indigo-500/30 dark:hover:border-indigo-500/20 transition-all duration-300 shadow-sm">
+                            <div className="flex items-center gap-2 mb-2.5 select-none">
+                              <span className="w-1.5 h-3.5 rounded-full bg-indigo-500" />
+                              <h4 className="text-xs sm:text-sm font-bold font-mono text-indigo-550 dark:text-indigo-450">{tip.term}</h4>
+                            </div>
+                            <p className="text-xs sm:text-sm text-neutral-550 dark:text-neutral-400 leading-relaxed">
+                              {tip.definition}
+                            </p>
                           </div>
                         ))}
                       </div>
-                    </div>
+                    )}
+
+                    {/* Tab 3: Daily Reminders & Fundamentals */}
+                    {recallTab === "daily" && (
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Data Types Card */}
+                        <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/20 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 transition-all duration-300 shadow-sm flex flex-col justify-between text-left">
+                          <div>
+                            <div className="flex items-center gap-2 mb-4 border-b border-neutral-100 dark:border-neutral-900 pb-3 select-none">
+                              <span className="w-1.5 h-3.5 rounded-full bg-emerald-500" />
+                              <h4 className="text-xs sm:text-sm font-bold text-neutral-850 dark:text-neutral-100">JavaScript Data Types</h4>
+                            </div>
+                            <div className="space-y-4">
+                              <div>
+                                <h5 className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-450 dark:text-neutral-400 mb-2 select-none">Primitives (Immutable, By Value)</h5>
+                                <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-550 dark:text-neutral-400 pl-4 list-disc">
+                                  <li><strong>String</strong>: <code>"hello"</code></li>
+                                  <li><strong>Number</strong>: <code>42</code>, <code>NaN</code></li>
+                                  <li><strong>Boolean</strong>: <code>true</code> / <code>false</code></li>
+                                  <li><strong>Undefined</strong>: Unassigned variables</li>
+                                  <li><strong>Null</strong>: Intentional blank reference</li>
+                                  <li><strong>Symbol</strong>: Unique property keys</li>
+                                  <li><strong>BigInt</strong>: Huge numbers (<code>42n</code>)</li>
+                                </ul>
+                              </div>
+                              <div className="pt-3 border-t border-neutral-100 dark:border-neutral-900">
+                                <h5 className="text-[10px] font-extrabold uppercase tracking-wider text-neutral-450 dark:text-neutral-400 mb-2 select-none">Non-Primitives (Mutable, By Reference)</h5>
+                                <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-550 dark:text-neutral-400 pl-4 list-disc">
+                                  <li><strong>Object</strong>: Keys-values <code>{`{ age: 24 }`}</code></li>
+                                  <li><strong>Array</strong>: List structure <code>[1, 2]</code></li>
+                                  <li><strong>Function</strong>: Callable code objects</li>
+                                  <li><strong>Date / RegExp</strong>: Internal structures</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Truthy / Falsy Card */}
+                        <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/20 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 transition-all duration-300 shadow-sm flex flex-col justify-between text-left">
+                          <div>
+                            <div className="flex items-center gap-2 mb-4 border-b border-neutral-100 dark:border-neutral-900 pb-3 select-none">
+                              <span className="w-1.5 h-3.5 rounded-full bg-emerald-500" />
+                              <h4 className="text-xs sm:text-sm font-bold text-neutral-850 dark:text-neutral-100">Truthy & Falsy Values</h4>
+                            </div>
+                            <div className="space-y-4">
+                              <div>
+                                <h5 className="text-[10px] font-extrabold uppercase tracking-wider text-rose-505 dark:text-rose-400 mb-2 select-none">The 8 Falsy Values (To false)</h5>
+                                <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-550 dark:text-neutral-400 pl-4 list-disc">
+                                  <li><code>false</code> (boolean)</li>
+                                  <li><code>0</code> / <code>-0</code> / <code>0n</code> (zeros)</li>
+                                  <li><code>""</code> / <code>''</code> / <code>``</code> (empty string)</li>
+                                  <li><code>null</code> (absence of reference)</li>
+                                  <li><code>undefined</code> (unassigned name)</li>
+                                  <li><code>NaN</code> (computational fail result)</li>
+                                </ul>
+                              </div>
+                              <div className="pt-3 border-t border-neutral-100 dark:border-neutral-900">
+                                <h5 className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-500 mb-2 select-none">Common Truthy Traps (To true!)</h5>
+                                <ul className="space-y-1.5 text-xs sm:text-sm text-neutral-555 dark:text-neutral-400 pl-4 list-disc font-semibold">
+                                  <li><code>[]</code> (empty array is truthy!)</li>
+                                  <li><code>{}</code> (empty object is truthy!)</li>
+                                  <li><code>"0"</code> / <code>'false'</code> (strings)</li>
+                                  <li><code>() =&gt; {}</code> (any function structure)</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Daily Dev Checklist Card */}
+                        <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/20 hover:border-emerald-500/30 dark:hover:border-emerald-500/20 transition-all duration-300 shadow-sm flex flex-col justify-between text-left">
+                          <div>
+                            <div className="flex items-center gap-2 mb-4 border-b border-neutral-100 dark:border-neutral-900 pb-3 select-none">
+                              <span className="w-1.5 h-3.5 rounded-full bg-emerald-500" />
+                              <h4 className="text-xs sm:text-sm font-bold text-neutral-850 dark:text-neutral-100">Daily Revision Checklist</h4>
+                            </div>
+                            <ul className="space-y-3.5 text-xs sm:text-sm text-neutral-550 dark:text-neutral-400 list-decimal pl-4 leading-relaxed">
+                              <li><strong>Comparison Rule</strong>: Always use strict equality (<code>===</code>) to prevent hidden dynamic coercion conversion errors.</li>
+                              <li><strong>React State</strong>: Treat states and props as immutable. Spread (<code>...</code>) or clone before modifications.</li>
+                              <li><strong>Cleanup Rule</strong>: Clean up timers, events, and WebSocket handlers in the <code>useEffect</code> return lifecycle function.</li>
+                              <li><strong>Keys Rule</strong>: Never use random values or array indices as rendering keys when lists re-order.</li>
+                            </ul>
+                          </div>
+                        </div>
+
+                      </div>
+                    )}
 
                   </div>
                 )}

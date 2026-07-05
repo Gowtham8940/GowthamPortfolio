@@ -18,19 +18,19 @@
           },
           {
             "id": "q-2",
-            "text": "What is the difference between <code><section></code>, <code><article></code>, and <code><aside></code> semantic elements?",
+            "text": "What is the difference between <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, and <code>&lt;aside&gt;</code> semantic elements?",
             "answers": [
               {
                 "type": "text",
-                "content": "<code><section></code> represents a thematic grouping of content, typically with a heading."
+                "content": "<code>&lt;section&gt;</code> represents a thematic grouping of content, typically with a heading."
               },
               {
                 "type": "text",
-                "content": "<code><article></code> represents a self-contained, independent composition (e.g., blog post)."
+                "content": "<code>&lt;article&gt;</code> represents a self-contained, independent composition (e.g., blog post)."
               },
               {
                 "type": "text",
-                "content": "<code><aside></code> represents tangential or sidebar content related to the surrounding context."
+                "content": "<code>&lt;aside&gt;</code> represents tangential or sidebar content related to the surrounding context."
               }
             ]
           },
@@ -159,7 +159,7 @@
             "answers": [
               {
                 "type": "text",
-                "content": "A weight system determining which CSS rules apply: Inline styles > IDs > Classes/Pseudo-classes > Elements/Pseudo-elements."
+                "content": "A weight system determining which CSS rules apply: Inline styles &gt; IDs &gt; Classes/Pseudo-classes &gt; Elements/Pseudo-elements."
               }
             ]
           },
@@ -238,7 +238,7 @@
             "answers": [
               {
                 "type": "text",
-                "content": "Compress via modern formats (<code>webp</code>, <code>avif</code>), utilize CDN imaging optimization APIs, lazy-load (<code>loading=\"lazy\"</code>), and implement <code>srcset</code> on <code><picture></code> wrappers."
+                "content": "Compress via modern formats (<code>webp</code>, <code>avif</code>), utilize CDN imaging optimization APIs, lazy-load (<code>loading=\"lazy\"</code>), and implement <code>srcset</code> on <code>&lt;picture&gt;</code> wrappers."
               }
             ]
           },
@@ -2563,7 +2563,7 @@
           },
           {
             "id": "q-199",
-            "text": "What's the difference between <code><section></code>, <code><article></code>, and <code><aside></code> semantic elements?",
+            "text": "What's the difference between <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, and <code>&lt;aside&gt;</code> semantic elements?",
             "answers": [
               {
                 "type": "text",
