@@ -585,6 +585,82 @@
                 "content": "Storage holds 5-10MB. Cookies hold 4KB and travel on HTTP requests, raising vulnerabilities unless flag attributes (<code>Secure</code>, <code>HttpOnly</code>) are configured."
               }
             ]
+          },
+          {
+            "id": "js-new-1",
+            "text": "Explain IIFE (Immediately Invoked Function Expression) and its real-world use cases.",
+            "answers": [
+              {
+                "type": "text",
+                "content": "An IIFE is a function that runs immediately upon declaration."
+              },
+              {
+                "type": "text",
+                "content": "Syntax: <code>(function() { ... })()</code>."
+              },
+              {
+                "type": "text",
+                "content": "Use cases: Prevents variable pollution in the global scope, creates private scopes, and was traditionally used to handle asynchronous closures in loop scopes."
+              }
+            ]
+          },
+          {
+            "id": "js-new-2",
+            "text": "What is the Temporal Dead Zone (TDZ) in JavaScript?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "The TDZ is the period between entering a variable's block scope and its actual variable declaration line."
+              },
+              {
+                "type": "text",
+                "content": "Attempting to read or write the variable during this period triggers a <code>ReferenceError</code>."
+              },
+              {
+                "type": "text",
+                "content": "Affects variable block bindings declared with <code>let</code> and <code>const</code>."
+              }
+            ]
+          },
+          {
+            "id": "js-new-3",
+            "text": "What is the difference between the Scope Chain and Lexical Scope?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "Lexical Scope is determined statically at compile-time based on where functions are physically written in the code."
+              },
+              {
+                "type": "text",
+                "content": "Scope Chain is the runtime lookup process of nested parent lexical scopes when the JS engine resolves a variable."
+              }
+            ]
+          },
+          {
+            "id": "js-new-4",
+            "text": "Explain the <code>this</code> keyword binding rules in JavaScript.",
+            "answers": [
+              {
+                "type": "text",
+                "content": "The <code>this</code> reference is determined at call-time using four main rules:"
+              },
+              {
+                "type": "text",
+                "content": "1. <strong>Default Binding</strong>: Refers to the global object (window/global) or undefined in strict mode."
+              },
+              {
+                "type": "text",
+                "content": "2. <strong>Implicit Binding</strong>: Set to the object prefix calling the method (e.g., <code>obj.foo()</code>)."
+              },
+              {
+                "type": "text",
+                "content": "3. <strong>Explicit Binding</strong>: Set manually using <code>.call()</code>, <code>.apply()</code>, or <code>.bind()</code>."
+              },
+              {
+                "type": "text",
+                "content": "4. <strong>New Binding</strong>: Instantiated inside a constructor function, pointing to the newly constructed object instance."
+              }
+            ]
           }
         ]
       },
@@ -734,6 +810,68 @@
                 "content": "Builds scalable, type-safe API abstractions and data-structures that support varying inputs without writing duplicate models."
               }
             ]
+          },
+          {
+            "id": "browser-new-1",
+            "text": "What is the DOM (Document Object Model)?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "The DOM is an API representation of an HTML document structure as a node tree."
+              },
+              {
+                "type": "text",
+                "content": "It permits programming languages like JavaScript to add, delete, edit, and style HTML tags dynamically."
+              }
+            ]
+          },
+          {
+            "id": "browser-new-2",
+            "text": "What is the Critical Rendering Path (CRP)?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "The sequence of rendering pipeline steps the browser performs to translate HTML, CSS, and JS into actual pixels:"
+              },
+              {
+                "type": "text",
+                "content": "1. <strong>DOM Tree construction</strong> from HTML."
+              },
+              {
+                "type": "text",
+                "content": "2. <strong>CSSOM Tree construction</strong> from styles."
+              },
+              {
+                "type": "text",
+                "content": "3. <strong>Render Tree</strong> combination of DOM and CSSOM."
+              },
+              {
+                "type": "text",
+                "content": "4. <strong>Layout</strong>: Calculate coordinates and dimensions."
+              },
+              {
+                "type": "text",
+                "content": "5. <strong>Paint</strong>: Rasterize layout elements onto pixels."
+              }
+            ]
+          },
+          {
+            "id": "browser-new-4",
+            "text": "Web Storage vs Cookies vs IndexedDB: Explain the differences.",
+            "answers": [
+              {
+                "type": "text",
+                "content": "<strong>Cookies</strong>: Tiny capacity (4KB), sent automatically with every network request. Used for session identifiers."
+              },
+              {
+                "type": "text",
+                "content": "<strong>Web Storage (localStorage / sessionStorage)</strong>: 5MB-10MB limit, synchronous operations, client-side only key-value structure."
+              },
+              {
+                "type": "text",
+                "content": "<strong>IndexedDB</strong>: Large asynchronous transactional database. Supports objects and indexes, best for complex offline database caching."
+              }
+            ]
           }
         ]
       },
@@ -751,6 +889,46 @@
               {
                 "type": "text",
                 "content": "--"
+              }
+            ]
+          },
+          {
+            "id": "browser-new-3",
+            "text": "What happens when you enter a URL in the browser address bar?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "1. <strong>DNS Resolution</strong>: Translates the hostname to a server IP address."
+              },
+              {
+                "type": "text",
+                "content": "2. <strong>TCP Handshake</strong>: Establishes socket connection (and TLS Handshake for HTTPS)."
+              },
+              {
+                "type": "text",
+                "content": "3. <strong>HTTP Request</strong> sent to server."
+              },
+              {
+                "type": "text",
+                "content": "4. <strong>Server processing</strong> returns HTTP response (HTML payload)."
+              },
+              {
+                "type": "text",
+                "content": "5. <strong>Parsing & Rendering</strong>: Builds DOM, CSSOM, layout calculations, and paints UI."
+              }
+            ]
+          },
+          {
+            "id": "browser-new-5",
+            "text": "What is IntersectionObserver and how does it compare to MutationObserver?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "<strong>IntersectionObserver</strong> monitors when target element scopes intersect viewport margins. Efficiently triggers image lazy loading or infinite scrolling."
+              },
+              {
+                "type": "text",
+                "content": "<strong>MutationObserver</strong> monitors physical changes made to the DOM tree (e.g., node additions, text edits, attribute modifications)."
               }
             ]
           }
@@ -1677,6 +1855,30 @@
                 "content": "Update state assuming database success, rolling changes back on failure."
               }
             ]
+          },
+          {
+            "id": "perf-new-1",
+            "text": "Explain Memoization in JavaScript.",
+            "answers": [
+              {
+                "type": "text",
+                "content": "Memoization is an optimization pattern caching computation output based on input parameters. If matching inputs occur later, the cache resolves without executing calculations."
+              },
+              {
+                "type": "text",
+                "content": "React uses this pattern with <code>useMemo</code> (values) and <code>useCallback</code> (function instances)."
+              }
+            ]
+          },
+          {
+            "id": "perf-new-3",
+            "text": "What is Lighthouse and how does it audit web applications?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "An open-source developer tool in Chrome auditing performance, accessibility, best practices, SEO, and progressive web app patterns."
+              }
+            ]
           }
         ]
       },
@@ -1734,6 +1936,28 @@
               {
                 "type": "text",
                 "content": "--"
+              }
+            ]
+          },
+          {
+            "id": "perf-new-2",
+            "text": "What are Core Web Vitals (CWV)?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "Google metric standards measuring real-world user page speed experiences:"
+              },
+              {
+                "type": "text",
+                "content": "1. <strong>LCP (Largest Contentful Paint)</strong>: Measures main page loading speed. Target: &lt;= 2.5s."
+              },
+              {
+                "type": "text",
+                "content": "2. <strong>INP (Interaction to Next Paint)</strong>: Measures UI responsiveness following interactions. Target: &lt;= 200ms."
+              },
+              {
+                "type": "text",
+                "content": "3. <strong>CLS (Cumulative Layout Shift)</strong>: Measures page elements stability. Target: &lt;= 0.1."
               }
             ]
           }
@@ -2541,6 +2765,47 @@
             ]
           }
         ]
+      },
+      {
+        "difficulty": "Intermediate",
+        "questions": [
+          {
+            "id": "css-new-1",
+            "text": "Flexbox vs Grid: When should you use which?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "Flexbox is one-dimensional (handles rows OR columns at a time). It is content-driven, perfect for linear alignments, nav links, and flex distributions."
+              },
+              {
+                "type": "text",
+                "content": "Grid is two-dimensional (handles rows AND columns simultaneously). It is layout-driven, perfect for overall page grids, sidebars, headers, and overlapping elements."
+              }
+            ]
+          },
+          {
+            "id": "css-new-2",
+            "text": "What is the difference between position: relative, absolute, fixed, and sticky?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "<code>relative</code>: Positioned relative to its normal position in the document flow."
+              },
+              {
+                "type": "text",
+                "content": "<code>absolute</code>: Removed from the document flow and positioned relative to its closest positioned ancestor."
+              },
+              {
+                "type": "text",
+                "content": "<code>fixed</code>: Removed from the flow and positioned relative to the viewport, staying in place on scroll."
+              },
+              {
+                "type": "text",
+                "content": "<code>sticky</code>: Behaves like <code>relative</code> until a scroll threshold is met, then acts as <code>fixed</code>."
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -2592,6 +2857,100 @@
               {
                 "type": "text",
                 "content": "--"
+              }
+            ]
+          },
+          {
+            "id": "html-new-1",
+            "text": "What is the difference between HTML and HTML5?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "HTML5 is the latest version of HTML with new semantic tags like <code>&lt;header&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;article&gt;</code>, and <code>&lt;section&gt;</code>."
+              },
+              {
+                "type": "text",
+                "content": "Supports native multimedia components (<code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>) without external plugins like Flash."
+              },
+              {
+                "type": "text",
+                "content": "Provides local data storage options (<code>localStorage</code> and <code>sessionStorage</code>) which are larger and more secure than traditional cookies."
+              },
+              {
+                "type": "text",
+                "content": "Enables browser APIs like Web Workers, Geolocation, Canvas, and drag-and-drop actions."
+              }
+            ]
+          },
+          {
+            "id": "html-new-2",
+            "text": "What are semantic elements and why are they important?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "Semantic elements clearly describe their meaning to both the browser and the developer (e.g., <code>&lt;form&gt;</code>, <code>&lt;table&gt;</code>, <code>&lt;article&gt;</code>)."
+              },
+              {
+                "type": "text",
+                "content": "They improve accessibility, allowing screen readers and assistive devices to navigate the document structure easily."
+              },
+              {
+                "type": "text",
+                "content": "They boost SEO rankings, enabling search engines to index and rank page sections accurately."
+              }
+            ]
+          },
+          {
+            "id": "html-new-3",
+            "text": "What is the difference between <code>&lt;div&gt;</code> and <code>&lt;span&gt;</code>?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "<code>&lt;div&gt;</code> is a block-level element that always starts on a new line and takes up the full width of its parent container."
+              },
+              {
+                "type": "text",
+                "content": "<code>&lt;span&gt;</code> is an inline element that does not start on a new line and only takes up the width necessary for its content."
+              },
+              {
+                "type": "text",
+                "content": "Use <code>&lt;div&gt;</code> to group block layouts, and <code>&lt;span&gt;</code> to target specific words or inline elements for styling."
+              }
+            ]
+          },
+          {
+            "id": "html-new-4",
+            "text": "What is the purpose of the <code>&lt;!DOCTYPE&gt;</code> declaration?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "It is an instruction to the browser indicating which HTML version the page is written in."
+              },
+              {
+                "type": "text",
+                "content": "It ensures the browser renders the page in standard mode rather than quirks mode (which can break layout and styling behaviors)."
+              },
+              {
+                "type": "text",
+                "content": "In HTML5, it is declared simply as <code>&lt;!DOCTYPE html&gt;</code>."
+              }
+            ]
+          },
+          {
+            "id": "html-new-5",
+            "text": "What are meta tags in HTML?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "Meta tags provide metadata about the HTML document (data about data), such as character encoding, description, keywords, and author."
+              },
+              {
+                "type": "text",
+                "content": "They reside inside the <code>&lt;head&gt;</code> container and are invisible to users but read by search engines and browsers."
+              },
+              {
+                "type": "text",
+                "content": "Essential for search engine optimization (SEO) and configuring viewport responsiveness (using the viewport meta tag)."
               }
             ]
           }
@@ -2910,6 +3269,49 @@
             ]
           }
         ]
+      },
+      {
+        "difficulty": "Beginner",
+        "questions": [
+          {
+            "id": "code-new-1",
+            "text": "Check if a string is a Palindrome.",
+            "answers": [
+              {
+                "type": "code",
+                "language": "javascript",
+                "code": "function isPalindrome(str) {\n  const clean = str.toLowerCase().replace(/[^a-z0-9]/g, \"\");\n  return clean === clean.split(\"\").reverse().join(\"\");\n}\n\nconsole.log(isPalindrome(\"A man, a plan, a canal. Panama\")); // true\nconsole.log(isPalindrome(\"hello\")); // false"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "difficulty": "Intermediate",
+        "questions": [
+          {
+            "id": "code-new-2",
+            "text": "Flatten a nested array recursively.",
+            "answers": [
+              {
+                "type": "code",
+                "language": "javascript",
+                "code": "function flattenArray(arr) {\n  let result = [];\n  for (let item of arr) {\n    if (Array.isArray(item)) {\n      result.push(...flattenArray(item));\n    } else {\n      result.push(item);\n    }\n  }\n  return result;\n}\n\nconsole.log(flattenArray([1, [2, [3, 4], 5], 6])); // [1, 2, 3, 4, 5, 6]"
+              }
+            ]
+          },
+          {
+            "id": "code-new-3",
+            "text": "Deep Copy an object.",
+            "answers": [
+              {
+                "type": "code",
+                "language": "javascript",
+                "code": "function deepCopy(obj) {\n  if (obj === null || typeof obj !== \"object\") return obj;\n  \n  if (Array.isArray(obj)) {\n    return obj.map(item => deepCopy(item));\n  }\n  \n  const clone = {};\n  for (let key in obj) {\n    if (obj.hasOwnProperty(key)) {\n      clone[key] = deepCopy(obj[key]);\n    }\n  }\n  return clone;\n}\n\nconst original = { a: 1, b: { c: 2 } };\nconst copied = deepCopy(original);\ncopied.b.c = 99;\nconsole.log(original.b.c); // 2 (original remains untouched!)"
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -3031,6 +3433,33 @@
               {
                 "type": "text",
                 "content": "--"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "difficulty": "Intermediate",
+        "questions": [
+          {
+            "id": "code-new-4",
+            "text": "Polyfill for <code>Array.prototype.reduce()</code>.",
+            "answers": [
+              {
+                "type": "code",
+                "language": "javascript",
+                "code": "Array.prototype.myReduce = function(callback, initialValue) {\n  let accumulator = initialValue !== undefined ? initialValue : this[0];\n  let startIndex = initialValue !== undefined ? 0 : 1;\n  \n  for (let i = startIndex; i < this.length; i++) {\n    accumulator = callback(accumulator, this[i], i, this);\n  }\n  return accumulator;\n};\n\nconst nums = [1, 2, 3, 4];\nconst sum = nums.myReduce((acc, curr) => acc + curr, 0);\nconsole.log(sum); // 10"
+              }
+            ]
+          },
+          {
+            "id": "code-new-5",
+            "text": "Polyfill for <code>Function.prototype.bind()</code>.",
+            "answers": [
+              {
+                "type": "code",
+                "language": "javascript",
+                "code": "Function.prototype.myBind = function(context, ...args) {\n  const fn = this;\n  return function(...newArgs) {\n    return fn.apply(context, [...args, ...newArgs]);\n  };\n};\n\nconst user = { name: \"Gowtham\" };\nfunction greet(prefix, suffix) {\n  return `${prefix}, ${this.name}${suffix}`;\n}\n\nconst bound = greet.myBind(user, \"Hello\");\nconsole.log(bound(\"!\")); // \"Hello, Gowtham!\""
               }
             ]
           }

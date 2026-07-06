@@ -433,9 +433,9 @@ export default function Handbook() {
               {/* ── Architecture Diagrams Dashboard ── */}
               <div className="mb-8 p-6 rounded-2xl border border-neutral-250 dark:border-neutral-850 bg-white dark:bg-[#0c101a]/30 shadow-sm">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-450 dark:text-neutral-400 mb-4 flex items-center gap-2 select-none">
-                  <FiBookOpen className="text-blue-500" /> React Native Architecture & Cheat Sheet
+                  <FiBookOpen className="text-blue-500" /> Architecture Diagrams & JavaScript Reference
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div 
                     className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
                     onClick={() => setSelectedImage("/images/new_react_native.jpg")}
@@ -459,6 +459,19 @@ export default function Handbook() {
                     </div>
                     <div className="p-2 flex items-center justify-center">
                       <img src="/images/react_native_arch.jpg" alt="React Native JSI & Bridge Layout" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
+                    </div>
+                  </div>
+
+                  <div 
+                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
+                    onClick={() => setSelectedImage("/images/built in functions js.jpeg")}
+                  >
+                    <div className="p-3 bg-neutral-100 dark:bg-neutral-950/60 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-[10px] uppercase font-bold text-neutral-400 select-none">
+                      <span>JavaScript Built-in Functions Reference</span>
+                      <span className="text-[9px] text-blue-500 font-semibold group-hover:underline">Zoom</span>
+                    </div>
+                    <div className="p-2 flex items-center justify-center">
+                      <img src="/images/built in functions js.jpeg" alt="JavaScript Built-in Functions" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
                     </div>
                   </div>
                 </div>
