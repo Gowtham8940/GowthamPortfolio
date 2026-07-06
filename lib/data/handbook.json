@@ -661,6 +661,52 @@
                 "content": "4. <strong>New Binding</strong>: Instantiated inside a constructor function, pointing to the newly constructed object instance."
               }
             ]
+          },
+          {
+            "id": "js-async-new-1",
+            "text": "Why does <code>Promise.then()</code> execute before <code>setTimeout(..., 0)</code>?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "This occurs because of the event loop's queue prioritization rules."
+              },
+              {
+                "type": "text",
+                "content": "<code>Promise.then()</code> callbacks are resolved using the <strong>Microtask Queue</strong>, while <code>setTimeout</code> events use the <strong>Macrotask Queue</strong> (Task Queue)."
+              },
+              {
+                "type": "text",
+                "content": "The Event Loop checks and completely flushes the Microtask Queue before moving on to the next task in the Macrotask Queue. Therefore, promises resolve first."
+              }
+            ]
+          },
+          {
+            "id": "js-async-new-2",
+            "text": "What is the difference between sequential and parallel await in JavaScript?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "<strong>Sequential Await</strong> blocks code execution step-by-step. Each promise must resolve before the next one starts. Code example: <code>const a = await first(); const b = await second();</code>."
+              },
+              {
+                "type": "text",
+                "content": "<strong>Parallel Await</strong> starts all promises simultaneously and waits for them altogether. Code example: <code>const [a, b] = await Promise.all([first(), second()]);</code>. This is much faster for independent operations."
+              }
+            ]
+          },
+          {
+            "id": "js-async-new-3",
+            "text": "Why is the ES6 class construct referred to as \"syntactic sugar\" over prototypes?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "Under the hood, JavaScript does not have actual class entities like Java or C++. ES6 classes are compiled down to constructor functions and prototypical inheritance."
+              },
+              {
+                "type": "text",
+                "content": "Defining a class method is equivalent to adding that method directly onto the function's prototype chain: <code>MyClass.prototype.myMethod = function() {}</code>."
+              }
+            ]
           }
         ]
       },
@@ -747,6 +793,20 @@
               {
                 "type": "text",
                 "content": "--"
+              }
+            ]
+          },
+          {
+            "id": "js-async-new-4",
+            "text": "Why do stale closures happen in React hooks?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "A stale closure occurs when a hook (like <code>useEffect</code> or <code>useCallback</code>) captures variables from a past render cycle and does not update when those variables change."
+              },
+              {
+                "type": "text",
+                "content": "This happens when the hook's dependency array is empty or missing updated variables, causing the closure to refer to old scope variables."
               }
             ]
           }
@@ -2023,6 +2083,70 @@
               {
                 "type": "text",
                 "content": "--"
+              }
+            ]
+          },
+          {
+            "id": "react-state-new-1",
+            "text": "Why do <code>setCount(count + 1)</code> and <code>setCount(prev =&gt; prev + 1)</code> behave differently?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "<code>setCount(count + 1)</code> uses the value of <code>count</code> captured during the current render scope (state is a snapshot). Calling this multiple times in a row won't increment multiple times."
+              },
+              {
+                "type": "text",
+                "content": "<code>setCount(prev =&gt; prev + 1)</code> uses a updater function that receives the latest pending state value in the queue. This is safe for concurrent updates."
+              },
+              {
+                "type": "text",
+                "content": "Output test code:<br/><pre><code>const handleClick = () => {\n  setCount(prev => prev + 1);\n  setCount(count + 1);\n};</code></pre> If count is 0, <code>setCount(prev => prev + 1)</code> queues count as 1. Then <code>setCount(count + 1)</code> overrides it with <code>0 + 1 = 1</code>. The final state will be 1, not 2."
+              }
+            ]
+          },
+          {
+            "id": "react-state-new-2",
+            "text": "Why does mutating React state directly fail to trigger a re-render?",
+            "answers": [
+              {
+                "type": "text",
+                "content": "React checks if state changes using shallow equality comparison (<code>Object.is</code>)."
+              },
+              {
+                "type": "text",
+                "content": "If you mutate properties of an object directly (e.g., <code>user.name = \"David\"</code>) and then call <code>setUser(user)</code>, React sees that the object reference is identical and skips rendering."
+              },
+              {
+                "type": "text",
+                "content": "To trigger a render, you must create a new object reference: <code>setUser({ ...user, name: \"David\" })</code>."
+              }
+            ]
+          },
+          {
+            "id": "react-state-new-3",
+            "text": "Analyze the <code>useEffect</code> rendering block:<br/><pre><code>const [count, setCount] = useState(0);\nuseEffect(() =&gt; {\n  setCount(count + 1);\n});</code></pre>",
+            "answers": [
+              {
+                "type": "text",
+                "content": "<strong>How many times does it render?</strong>: It triggers an infinite render loop, eventually crashing the application in production."
+              },
+              {
+                "type": "text",
+                "content": "<strong>Why does this happen?</strong>: <code>useEffect</code> without a dependency array runs after <i>every single render</i>. When the effect runs, it calls <code>setCount</code>, which triggers a new render. This in turn triggers the effect again, repeating infinitely."
+              }
+            ]
+          },
+          {
+            "id": "react-state-new-4",
+            "text": "Analyze child re-rendering behaviors and optimizations:<br/><pre><code>function Child() {\n  console.log(\"Child\");\n  return &lt;h1&gt;Hello&lt;/h1&gt;;\n}\n\nfunction Parent() {\n  const [count, setCount] = useState(0);\n  return (\n    &lt;&gt;\n      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;Click&lt;/button&gt;\n      &lt;Child /&gt;\n    &lt;/&gt;\n  );\n}</code></pre>",
+            "answers": [
+              {
+                "type": "text",
+                "content": "<strong>Does the Child component re-render?</strong>: Yes. When <code>Parent</code> state changes, the parent re-renders, causing all nested children (like <code>Child</code>) to re-render recursively by default."
+              },
+              {
+                "type": "text",
+                "content": "<strong>How can it be optimized?</strong>: Wrap the child in <code>React.memo</code>: <code>const Child = React.memo(function Child() { ... })</code>. This prevents re-renders unless its props change."
               }
             ]
           }
@@ -3312,6 +3436,33 @@
             ]
           }
         ]
+      },
+      {
+        "difficulty": "Advanced",
+        "questions": [
+          {
+            "id": "code-new-10",
+            "text": "How would you deep clone an object that contains circular references?",
+            "answers": [
+              {
+                "type": "code",
+                "language": "javascript",
+                "code": "function deepClone(obj, map = new WeakMap()) {\n  if (obj === null || typeof obj !== \"object\") return obj;\n  \n  // If we already cloned this object, return the clone to avoid infinite loop\n  if (map.has(obj)) {\n    return map.get(obj);\n  }\n  \n  const clone = Array.isArray(obj) ? [] : {};\n  map.set(obj, clone);\n  \n  for (let key in obj) {\n    if (obj.hasOwnProperty(key)) {\n      clone[key] = deepClone(obj[key], map);\n    }\n  }\n  return clone;\n}\n\n// Test with circular reference\nconst user = { name: \"Gowtham\" };\nuser.self = user; // circular link\n\nconst copied = deepClone(user);\nconsole.log(copied.name); // Gowtham\nconsole.log(copied.self === copied); // true (circular references resolved correctly!)"
+              }
+            ]
+          },
+          {
+            "id": "code-new-11",
+            "text": "Implement an LRU (Least Recently Used) Cache from scratch.",
+            "answers": [
+              {
+                "type": "code",
+                "language": "javascript",
+                "code": "class LRUCache {\n  constructor(capacity) {\n    this.capacity = capacity;\n    this.cache = new Map(); // Map preserves insertion order\n  }\n\n  get(key) {\n    if (!this.cache.has(key)) return -1;\n    \n    // Refresh item position by deleting and re-inserting\n    const val = this.cache.get(key);\n    this.cache.delete(key);\n    this.cache.set(key, val);\n    return val;\n  }\n\n  put(key, value) {\n    if (this.cache.has(key)) {\n      this.cache.delete(key);\n    } else if (this.cache.size >= this.capacity) {\n      // Delete the oldest inserted item (first key in map)\n      const oldestKey = this.cache.keys().next().value;\n      this.cache.delete(oldestKey);\n    }\n    this.cache.set(key, value);\n  }\n}\n\nconst lru = new LRUCache(2);\nlru.put(1, 10);\nlru.put(2, 20);\nconsole.log(lru.get(1)); // 10\nlru.put(3, 30); // Evicts key 2\nconsole.log(lru.get(2)); // -1 (evicted)"
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -3460,6 +3611,33 @@
                 "type": "code",
                 "language": "javascript",
                 "code": "Function.prototype.myBind = function(context, ...args) {\n  const fn = this;\n  return function(...newArgs) {\n    return fn.apply(context, [...args, ...newArgs]);\n  };\n};\n\nconst user = { name: \"Gowtham\" };\nfunction greet(prefix, suffix) {\n  return `${prefix}, ${this.name}${suffix}`;\n}\n\nconst bound = greet.myBind(user, \"Hello\");\nconsole.log(bound(\"!\")); // \"Hello, Gowtham!\""
+              }
+            ]
+          },
+          {
+            "id": "code-new-12",
+            "text": "Build an Autocomplete Suggestion Search Component in React.",
+            "answers": [
+              {
+                "type": "code",
+                "language": "jsx",
+                "code": "import React, { useState } from \"react\";\n\nconst fruits = [\"Apple\", \"Banana\", \"Mango\", \"Grapes\", \"Orange\", \"Pineapple\"];\n\nexport default function Autocomplete() {\n  const [query, setQuery] = useState(\"\");\n  const [suggestions, setSuggestions] = useState([]);\n  const [show, setShow] = useState(false);\n\n  const handleChange = (e) => {\n    const val = e.target.value;\n    setQuery(val);\n    if (val.trim() === \"\") {\n      setSuggestions([]);\n    } else {\n      const filtered = fruits.filter(f => \n        f.toLowerCase().includes(val.toLowerCase())\n      );\n      setSuggestions(filtered);\n    }\n  };\n\n  const handleSelect = (item) => {\n    setQuery(item);\n    setSuggestions([]);\n  };\n\n  return (\n    <div style={{ padding: 20, maxWidth: 300 }}>\n      <input\n        type=\"text\"\n        value={query}\n        onChange={handleChange}\n        placeholder=\"Search fruits...\"\n        style={{ width: \"100%\", padding: 8, borderRadius: 6, border: \"1px solid #ccc\" }}\n      />\n      {suggestions.length > 0 && (\n        <ul style={{ border: \"1px solid #ccc\", listStyle: \"none\", padding: 0, margin: \"4px 0 0\" }}>\n          {suggestions.map((item, idx) => (\n            <li \n              key={idx} \n              onClick={() => handleSelect(item)}\n              style={{ padding: 8, cursor: \"pointer\", borderBottom: \"1px solid #eee\" }}\n            >\n              {item}\n            </li>\n          ))}\n        </ul>\n      )}\n    </div>\n  );\n}"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "difficulty": "Beginner",
+        "questions": [
+          {
+            "id": "code-new-13",
+            "text": "Find the bug in this <code>.map()</code> array code segment.",
+            "answers": [
+              {
+                "type": "code",
+                "language": "javascript",
+                "code": "// Buggy code:\nnumbers.map(number => {\n  <div>{number}</div>;\n});\n\n// Explanation:\n// The arrow function uses curly braces {} which expects an explicit return.\n// Without it, the map returns undefined for each item.\n\n// Fix 1: Implicit Return (Remove curly braces)\nnumbers.map(number => (\n  <div key={number}>{number}</div>\n));\n\n// Fix 2: Explicit Return\nnumbers.map(number => {\n  return <div key={number}>{number}</div>;\n});"
               }
             ]
           }

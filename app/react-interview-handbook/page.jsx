@@ -435,7 +435,7 @@ export default function Handbook() {
                 <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-450 dark:text-neutral-400 mb-4 flex items-center gap-2 select-none">
                   <FiBookOpen className="text-blue-500" /> Architecture Diagrams & JavaScript Reference
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div 
                     className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
                     onClick={() => setSelectedImage("/images/new_react_native.jpg")}
@@ -459,6 +459,19 @@ export default function Handbook() {
                     </div>
                     <div className="p-2 flex items-center justify-center">
                       <img src="/images/react_native_arch.jpg" alt="React Native JSI & Bridge Layout" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
+                    </div>
+                  </div>
+
+                  <div 
+                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
+                    onClick={() => setSelectedImage("/images/fabric_renderer_flow.jpg")}
+                  >
+                    <div className="p-3 bg-neutral-100 dark:bg-neutral-950/60 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-[10px] uppercase font-bold text-neutral-400 select-none">
+                      <span>Fabric Renderer Flow & UI Updates</span>
+                      <span className="text-[9px] text-blue-500 font-semibold group-hover:underline">Zoom</span>
+                    </div>
+                    <div className="p-2 flex items-center justify-center">
+                      <img src="/images/fabric_renderer_flow.jpg" alt="Fabric Renderer Flow" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
                     </div>
                   </div>
 
@@ -506,6 +519,12 @@ export default function Handbook() {
                         className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${recallTab === "daily" ? "bg-emerald-500 text-white shadow-sm" : "bg-neutral-100 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"}`}
                       >
                         📅 Daily Reminders & Types
+                      </button>
+                      <button
+                        onClick={() => setRecallTab("roadmap")}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${recallTab === "roadmap" ? "bg-amber-500 text-white shadow-sm" : "bg-neutral-100 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"}`}
+                      >
+                        🗺️ 7-Day Roadmap
                       </button>
                     </div>
 
@@ -633,7 +652,100 @@ export default function Handbook() {
                             </ul>
                           </div>
                         </div>
+                      </div>
+                    )}
 
+                    {/* Tab 4: 7-Day Study Roadmap */}
+                    {recallTab === "roadmap" && (
+                      <div className="space-y-6">
+                        <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.02] text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 select-none text-left">
+                          <strong>💡 Study Tip:</strong> A week is enough to refresh the core concepts that interviewers ask most often, build confidence, and get in the right mindset before stepping into the interview room.
+                        </div>
+
+                        <div className="relative border-l-2 border-neutral-200 dark:border-neutral-800 ml-4 pl-6 space-y-6 text-left">
+                          {/* Day 1 */}
+                          <div className="relative">
+                            <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white text-[9px] font-bold">1</span>
+                            <h4 className="text-sm font-bold text-neutral-850 dark:text-neutral-100">Day 1 – JavaScript Fundamentals</h4>
+                            <ul className="mt-2 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 space-y-1 list-disc pl-4">
+                              <li><strong>Closures</strong>: Lexical scoping and preserving references.</li>
+                              <li><strong>Hoisting</strong>: Variable compilation phases.</li>
+                              <li><strong>Event Loop</strong>: Macrotasks vs microtasks prioritization.</li>
+                              <li><strong>Promises & async/await</strong>: Asynchronous pipeline flows.</li>
+                              <li><strong>call, apply, bind</strong>: Explicit execution contexts.</li>
+                            </ul>
+                          </div>
+
+                          {/* Day 2 */}
+                          <div className="relative">
+                            <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white text-[9px] font-bold">2</span>
+                            <h4 className="text-sm font-bold text-neutral-850 dark:text-neutral-100">Day 2 – React Core</h4>
+                            <ul className="mt-2 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 space-y-1 list-disc pl-4">
+                              <li><strong>Virtual DOM</strong>: Abstract node trees representation.</li>
+                              <li><strong>Reconciliation</strong>: Fiber node diff calculations.</li>
+                              <li><strong>JSX</strong>: Compiles down to <code>React.createElement</code> syntax.</li>
+                              <li><strong>Components & Props</strong>: Reusable structures.</li>
+                              <li><strong>State vs Props</strong>: Mutable local state vs immutable params.</li>
+                            </ul>
+                          </div>
+
+                          {/* Day 3 */}
+                          <div className="relative">
+                            <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white text-[9px] font-bold">3</span>
+                            <h4 className="text-sm font-bold text-neutral-850 dark:text-neutral-100">Day 3 – React Hooks</h4>
+                            <ul className="mt-2 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 space-y-1 list-disc pl-4">
+                              <li><strong>useState & useEffect</strong>: State management and render lifecycle rules.</li>
+                              <li><strong>useRef</strong>: Persistent values without triggering renders.</li>
+                              <li><strong>useMemo & useCallback</strong>: Value and callback instance memoization.</li>
+                              <li><strong>Custom Hooks</strong>: Extracting reusable logical scopes.</li>
+                            </ul>
+                          </div>
+
+                          {/* Day 4 */}
+                          <div className="relative">
+                            <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white text-[9px] font-bold">4</span>
+                            <h4 className="text-sm font-bold text-neutral-850 dark:text-neutral-100">Day 4 – State Management & API</h4>
+                            <ul className="mt-2 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 space-y-1 list-disc pl-4">
+                              <li><strong>Context API</strong>: Prop drilling resolution.</li>
+                              <li><strong>Redux Toolkit (RTK)</strong>: Single global store pattern.</li>
+                              <li><strong>RTK Query & API Integration</strong>: Modern server-state fetching and caching.</li>
+                            </ul>
+                          </div>
+
+                          {/* Day 5 */}
+                          <div className="relative">
+                            <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white text-[9px] font-bold">5</span>
+                            <h4 className="text-sm font-bold text-neutral-850 dark:text-neutral-100">Day 5 – Performance Optimization</h4>
+                            <ul className="mt-2 text-xs sm:text-sm text-neutral-550 dark:text-neutral-400 space-y-1 list-disc pl-4">
+                              <li><strong>React.memo</strong>: Pure component render optimization.</li>
+                              <li><strong>Code Splitting & Lazy Loading</strong>: Bundle optimization.</li>
+                              <li><strong>Debounce & Throttle</strong>: Event handler frequency throttling.</li>
+                              <li><strong>Preventing Unnecessary Re-renders</strong>: Render key optimizations.</li>
+                            </ul>
+                          </div>
+
+                          {/* Day 6 */}
+                          <div className="relative">
+                            <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white text-[9px] font-bold">6</span>
+                            <h4 className="text-sm font-bold text-neutral-850 dark:text-neutral-100">Day 6 – Practical Coding Challenges</h4>
+                            <ul className="mt-2 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 space-y-1 list-disc pl-4">
+                              <li><strong>Todo App / CRUD with REST APIs</strong>: State mutations check.</li>
+                              <li><strong>Autocomplete Search with Debouncing</strong>: UI inputs.</li>
+                              <li><strong>Infinite Scroll / Pagination</strong>: API integrations.</li>
+                            </ul>
+                          </div>
+
+                          {/* Day 7 */}
+                          <div className="relative">
+                            <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-white text-[9px] font-bold">7</span>
+                            <h4 className="text-sm font-bold text-neutral-850 dark:text-neutral-100">Day 7 – Mock Interview Prep</h4>
+                            <ul className="mt-2 text-xs sm:text-sm text-neutral-550 dark:text-neutral-400 space-y-1 list-disc pl-4">
+                              <li><strong>Project Review</strong>: Practice walking through a React Native project architecture end-to-end.</li>
+                              <li><strong>Revision</strong>: Re-read core questions and practice coding interview basics.</li>
+                              <li><strong>Behavioral Prep</strong>: Structure answers using the STAR method for past project challenges.</li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     )}
 
