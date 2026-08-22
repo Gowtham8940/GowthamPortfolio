@@ -55,32 +55,39 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.55 0.24 300);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.96 0.02 300);
+  --accent-foreground: oklch(0.4 0.2 300);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --ring: oklch(0.627 0.245 303);
+  --chart-1: oklch(0.627 0.245 303);
+  --chart-2: oklch(0.72 0.18 318);
+  --chart-3: oklch(0.55 0.24 285);
+  --chart-4: oklch(0.68 0.2 270);
+  --chart-5: oklch(0.5 0.22 320);
   --radius: 0.625rem;
+  /* Solar-system / day-night palette */
+  --brand: oklch(0.627 0.245 303);
+  --brand-soft: oklch(0.627 0.245 303 / 12%);
+  --sky-top: #bfe3ff;
+  --sky-bottom: #f7d9c4;
+  --celestial: #ffd25e;
+  --celestial-glow: rgba(255, 210, 94, 0.55);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: oklch(0.55 0.24 300);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-accent: oklch(0.96 0.02 300);
+  --sidebar-accent-foreground: oklch(0.4 0.2 300);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: oklch(0.627 0.245 303);
 }
 
 .dark {
@@ -90,31 +97,38 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.7 0.2 303);
+  --primary-foreground: oklch(0.145 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.3 0.06 300);
+  --accent-foreground: oklch(0.92 0.05 300);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --ring: oklch(0.7 0.2 303);
+  --chart-1: oklch(0.75 0.2 303);
+  --chart-2: oklch(0.72 0.18 318);
+  --chart-3: oklch(0.65 0.22 285);
+  --chart-4: oklch(0.7 0.2 270);
+  --chart-5: oklch(0.62 0.22 320);
+  /* Solar-system / day-night palette */
+  --brand: oklch(0.7 0.2 303);
+  --brand-soft: oklch(0.7 0.2 303 / 15%);
+  --sky-top: #05070f;
+  --sky-bottom: #1a0b2e;
+  --celestial: #e8ecff;
+  --celestial-glow: rgba(190, 160, 255, 0.5);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.7 0.2 303);
+  --sidebar-primary-foreground: oklch(0.145 0 0);
+  --sidebar-accent: oklch(0.3 0.06 300);
+  --sidebar-accent-foreground: oklch(0.92 0.05 300);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: oklch(0.7 0.2 303);
 }
 
 @layer base {
@@ -164,16 +178,16 @@
 
 @utility glow-hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   &:hover {
-    box-shadow: 0 0 25px rgba(59, 130, 246, 0.25);
-    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+    border-color: rgba(168, 85, 247, 0.45);
   }
 }
 
 
 @utility text-glow {
-  text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+  text-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
 }
 
 /* Keyframes and Animations */
@@ -230,4 +244,103 @@
 
 @utility animate-marquee-reverse {
   animation: marquee-reverse linear infinite;
+}
+
+/* ============================================================= */
+/*  Solar-System / Day-Night Theme Transition                    */
+/* ============================================================= */
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes celestial-pulse {
+  0%, 100% { filter: drop-shadow(0 0 30px var(--celestial-glow)); }
+  50% { filter: drop-shadow(0 0 55px var(--celestial-glow)); }
+}
+
+/* Full-screen overlay that plays while the theme flips */
+.theme-warp {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.theme-warp__sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+}
+
+.theme-warp__stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 75% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 50% 60%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 85% 70%, #fff, transparent),
+    radial-gradient(1px 1px at 35% 80%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 10% 65%, #fff, transparent),
+    radial-gradient(1px 1px at 65% 45%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 90% 40%, #fff, transparent);
+  background-repeat: no-repeat;
+}
+
+.theme-warp__celestial {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  width: 120px;
+  height: 120px;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+
+.theme-warp__sun {
+  background: radial-gradient(circle at 35% 35%, #fff6d5, #ffd25e 45%, #ff9d3c 100%);
+  box-shadow: 0 0 70px 20px rgba(255, 200, 90, 0.6);
+}
+
+.theme-warp__moon {
+  background: radial-gradient(circle at 35% 30%, #ffffff, #d7dcf5 55%, #aeb6e0 100%);
+  box-shadow: 0 0 60px 12px rgba(190, 175, 255, 0.55);
+}
+.theme-warp__moon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 30% 35%, rgba(150,160,200,0.5) 0 8px, transparent 9px),
+    radial-gradient(circle at 62% 55%, rgba(150,160,200,0.45) 0 12px, transparent 13px),
+    radial-gradient(circle at 48% 72%, rgba(150,160,200,0.4) 0 6px, transparent 7px);
+}
+
+/* Persistent, ultra-subtle starfield tuned per theme (behind everything) */
+.sky-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.dark .sky-ambient {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-warp,
+  .theme-warp__celestial { animation: none !important; transition: opacity 0.2s ease !important; }
 }

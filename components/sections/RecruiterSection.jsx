@@ -23,7 +23,7 @@ export function RecruiterSection() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200/60 dark:border-neutral-900/60 pb-6 mb-6">
               <div className="flex items-center gap-3">
-                <span className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl">
+                <span className="p-3 bg-purple-500/10 text-purple-500 rounded-2xl">
                   <FiBriefcase className="w-5 h-5" />
                 </span>
                 <div>
@@ -41,7 +41,7 @@ export function RecruiterSection() {
                 href="/resume/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-xl bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold transition-all shadow-md w-full sm:w-fit cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 px-4.5 py-2.5 rounded-xl bg-purple-500 hover:bg-purple-600 text-white text-xs font-bold transition-all shadow-md w-full sm:w-fit cursor-pointer"
               >
                 <FiDownload /> Download ATS Resume
               </a>
@@ -91,7 +91,7 @@ export function RecruiterSection() {
                 
                 <a
                   href={`mailto:${recruiterBriefData.email}`}
-                  className="p-2 border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-black hover:bg-neutral-50 rounded-xl text-neutral-600 hover:text-blue-500 flex items-center justify-center cursor-pointer shrink-0"
+                  className="p-2 border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-black hover:bg-neutral-50 rounded-xl text-neutral-600 hover:text-purple-500 flex items-center justify-center cursor-pointer shrink-0"
                   aria-label="Direct Email"
                 >
                   <FiMail className="w-4 h-4" />

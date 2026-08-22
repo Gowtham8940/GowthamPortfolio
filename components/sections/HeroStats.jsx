@@ -7,7 +7,7 @@ import { FiTrendingUp, FiLayers, FiUsers, FiCpu, FiDownloadCloud, FiSmartphone }
 
 const stats = [
   {
-    icon: <FiTrendingUp className="w-5 h-5 text-blue-500" />,
+    icon: <FiTrendingUp className="w-5 h-5 text-purple-500" />,
     value: "3.7",
     suffix: "+ Years",
     label: "Professional Experience",

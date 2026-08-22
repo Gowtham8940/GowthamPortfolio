@@ -11,7 +11,7 @@ const pinnedRepos = [
     stars: 6800,
     forks: 1900,
     language: "Objective-C",
-    langColor: "bg-blue-500",
+    langColor: "bg-purple-500",
     link: "https://github.com/react-native-video/react-native-video"
   },
   {
@@ -90,7 +90,7 @@ export function GitHub() {
   const grid = generateContributionGrid();
 
   return (
-    <section id="github" className="py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
+    <section id="github" className="py-14 sm:py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-12">
@@ -118,7 +118,7 @@ export function GitHub() {
                   className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-900 bg-white dark:bg-black/40 backdrop-blur-sm hover:border-neutral-350 dark:hover:border-neutral-800 transition-all cursor-pointer group"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-neutral-850 dark:text-neutral-100 group-hover:text-blue-500 transition-colors">
+                    <span className="text-sm font-bold text-neutral-850 dark:text-neutral-100 group-hover:text-purple-500 transition-colors">
                       {repo.name}
                     </span>
                     <FiGithub className="w-4 h-4 text-neutral-400" />
@@ -185,13 +185,13 @@ export function GitHub() {
             <div className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-900 bg-white dark:bg-black/40 backdrop-blur-sm">
               <h4 className="text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-3">Language Statistics</h4>
               <div className="flex h-2.5 rounded-full overflow-hidden w-full bg-neutral-100 dark:bg-neutral-900">
-                <div className="bg-blue-500 w-[55%]" title="TypeScript: 55%" />
+                <div className="bg-purple-500 w-[55%]" title="TypeScript: 55%" />
                 <div className="bg-yellow-500 w-[25%]" title="JavaScript: 25%" />
                 <div className="bg-purple-600 w-[15%]" title="Kotlin: 15%" />
                 <div className="bg-red-500 w-[5%]" title="Swift: 5%" />
               </div>
               <div className="flex justify-between items-center text-[10px] font-mono text-neutral-400 mt-3 flex-wrap gap-2">
-                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-500" />TypeScript (55%)</span>
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-purple-500" />TypeScript (55%)</span>
                 <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-yellow-500" />JavaScript (25%)</span>
                 <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-purple-600" />Kotlin (15%)</span>
                 <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500" />Swift (5%)</span>

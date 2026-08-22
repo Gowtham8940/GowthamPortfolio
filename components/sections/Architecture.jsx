@@ -17,9 +17,9 @@ export function Architecture() {
   const [activeNode, setActiveNode] = useState(null);
 
   return (
-    <section id="architecture" className="py-20 bg-white dark:bg-black transition-colors duration-300 relative overflow-hidden">
+    <section id="architecture" className="py-14 sm:py-20 bg-white dark:bg-black transition-colors duration-300 relative overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-500/5 blur-[100px] pointer-events-none rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-purple-500/5 blur-[100px] pointer-events-none rounded-full" />
       
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         {/* Title */}
@@ -47,11 +47,11 @@ export function Architecture() {
               onMouseLeave={() => setActiveNode(null)}
               className={`p-5 rounded-2xl border text-left cursor-pointer transition-all duration-300 ${
                 activeNode === "react-native" || !activeNode
-                  ? "border-blue-500 bg-blue-500/5 shadow-md shadow-blue-500/5"
+                  ? "border-purple-500 bg-purple-500/5 shadow-md shadow-purple-500/5"
                   : "border-neutral-200 dark:border-neutral-900 bg-white dark:bg-neutral-950/20 opacity-40"
               }`}
             >
-              <div className="flex items-center gap-3 mb-2 text-blue-500">
+              <div className="flex items-center gap-3 mb-2 text-purple-500">
                 {architectureNodes[0].icon}
                 <span className="font-bold text-xs sm:text-sm text-neutral-850 dark:text-neutral-100">
                   {architectureNodes[0].title}
@@ -91,7 +91,7 @@ export function Architecture() {
             <div className="hidden md:block absolute -inset-x-12 -inset-y-6 -z-10 pointer-events-none">
               <svg className="w-full h-full stroke-current text-neutral-250 dark:text-neutral-800" fill="none">
                 {/* Horizontal pathways */}
-                <path d="M-10 65 L80 65" className={activeNode === "react-native" ? "text-blue-500 stroke-[2px] animate-pulse" : ""} />
+                <path d="M-10 65 L80 65" className={activeNode === "react-native" ? "text-purple-500 stroke-[2px] animate-pulse" : ""} />
                 <path d="M-10 170 L80 170" className={activeNode === "redux-query" ? "text-purple-500 stroke-[2px] animate-pulse" : ""} />
                 
                 <path d="M190 65 L280 65" className={activeNode === "watermelondb" ? "text-emerald-500 stroke-[2px] animate-pulse" : ""} />

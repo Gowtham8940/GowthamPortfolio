@@ -2,34 +2,66 @@
 
 import React, { useState } from "react";
 import { appCarouselData } from "@/lib/data/certifications";
+import { useFeed } from "@/lib/hooks/useFeed";
 import { FadeIn } from "../animations/FadeIn";
-import { FiSmartphone, FiAward, FiDownload, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { AppIcon } from "@/components/ui/AppIcon";
+import { FiSmartphone, FiAward, FiDownload, FiChevronLeft, FiChevronRight, FiExternalLink } from "react-icons/fi";
+import { FaAndroid, FaApple } from "react-icons/fa";
 import { motion, AnimatePresence } from "motion/react";
 
 export function LiveApps() {
   const [activeIdx, setActiveIdx] = useState(0);
-
-  const nextApp = () => {
-    setActiveIdx((prev) => (prev + 1) % appCarouselData.length);
+  const { data: apps, meta } = useFeed("/api/feeds/playstore", "apps", appCarouselData);
+  const developer = meta.developer || {
+    name: "Purple Info Tech",
+    url: "https://play.google.com/store/apps/dev?id=8170755285088488138",
+    description:
+      "Purple Info Tech builds fast, reliable mobile apps with clean design and real-world performance in mind.",
   };
 
-  const prevApp = () => {
-    setActiveIdx((prev) => (prev - 1 + appCarouselData.length) % appCarouselData.length);
-  };
+  const total = apps.length;
+  const safeIdx = Math.min(activeIdx, total - 1);
 
-  const activeApp = appCarouselData[activeIdx];
+  const nextApp = () => setActiveIdx((prev) => (prev + 1) % total);
+  const prevApp = () => setActiveIdx((prev) => (prev - 1 + total) % total);
+
+  const activeApp = apps[safeIdx];
 
   return (
-    <section className="py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
+    <section className="py-14 sm:py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-6">
         {/* Title */}
-        <FadeIn delay={0.1} direction="up" className="text-center mb-12">
+        <FadeIn delay={0.1} direction="up" className="text-center mb-8">
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             Live Production Apps
           </h2>
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-3 max-w-xl mx-auto">
-            Scan QR codes to download these applications directly onto your mobile device from official app stores.
+            Shipped to millions of users worldwide — browse the apps and open them directly on the official app stores.
           </p>
+        </FadeIn>
+
+        {/* Google Play developer account identity */}
+        <FadeIn delay={0.15} direction="up" className="mb-10">
+          <a
+            href={developer.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-4 max-w-xl mx-auto p-4 rounded-2xl border border-neutral-200 dark:border-neutral-900 bg-white/70 dark:bg-black/40 backdrop-blur-sm hover:border-purple-400 dark:hover:border-purple-600 transition-colors"
+          >
+            <span className="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white shadow-lg">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 5.277L13.791 16 16.5 13.5l-13.5-7.75v-.473zm13.5 8.223l3.25-1.854a1.5 1.5 0 0 0 0-2.6L16.5 7.2zM3 3v.328l13.5 7.72 2.7-2.7L3 3zm0 18v-.328l13.5-7.72-2.7 2.7z" />
+              </svg>
+            </span>
+            <div className="text-left min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] uppercase font-bold text-neutral-400 tracking-wider">Google Play Developer</p>
+              </div>
+              <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100 truncate">{developer.name}</h3>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-1">{developer.description}</p>
+            </div>
+            <FiExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-purple-500 transition-colors shrink-0" />
+          </a>
         </FadeIn>
 
         {/* Carousel Container */}
@@ -65,26 +97,11 @@ export function LiveApps() {
               {/* App Meta Section */}
               <div className="flex-1 text-left w-full">
                 <div className="flex items-center gap-3">
-                  <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center shadow-inner shrink-0">
-                    {activeApp.icon ? (
-                      <img
-                        src={activeApp.icon}
-                        alt={`${activeApp.name} icon`}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = "none";
-                          const fallback = e.target.nextSibling;
-                          if (fallback) fallback.style.display = "flex";
-                        }}
-                      />
-                    ) : null}
-                    <div
-                      className="absolute inset-0 flex items-center justify-center text-lg font-bold text-blue-500 bg-blue-500/10"
-                      style={{ display: activeApp.icon ? "none" : "flex" }}
-                    >
-                      {activeApp.name.charAt(0)}
-                    </div>
-                  </div>
+                  <AppIcon
+                    app={activeApp}
+                    rounded="rounded-xl"
+                    className="w-12 h-12 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-inner shrink-0"
+                  />
 
                   <div>
                     <h3 className="text-xl font-bold text-neutral-800 dark:text-neutral-100">
@@ -102,14 +119,18 @@ export function LiveApps() {
 
                 {/* Key stats badges */}
                 <div className="flex flex-wrap gap-3 mt-6">
-                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/50 dark:border-neutral-850/50 text-neutral-600 dark:text-neutral-400">
-                    <FiSmartphone className="w-3.5 h-3.5 text-blue-500" />
-                    Rating: {activeApp.rating} ★
-                  </span>
-                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/50 dark:border-neutral-850/50 text-neutral-600 dark:text-neutral-400">
-                    <FiDownload className="w-3.5 h-3.5 text-emerald-500" />
-                    Downloads: {activeApp.downloads}
-                  </span>
+                  {activeApp.rating && (
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/50 dark:border-neutral-850/50 text-neutral-600 dark:text-neutral-400">
+                      <FiSmartphone className="w-3.5 h-3.5 text-purple-500" />
+                      Rating: {activeApp.rating} ★
+                    </span>
+                  )}
+                  {activeApp.downloads && (
+                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/50 dark:border-neutral-850/50 text-neutral-600 dark:text-neutral-400">
+                      <FiDownload className="w-3.5 h-3.5 text-emerald-500" />
+                      Downloads: {activeApp.downloads}
+                    </span>
+                  )}
                 </div>
 
                 {/* Badge images */}
@@ -156,27 +177,30 @@ export function LiveApps() {
                 </div>
               </div>
 
-              {/* Dynamic App Asset Preview Block */}
-              <div className="relative w-36 h-36 flex items-center justify-center p-4 rounded-3xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-inner shrink-0">
-                <div className="relative w-24 h-24 rounded-2xl overflow-hidden shadow-lg border border-neutral-200 dark:border-neutral-700 bg-white flex items-center justify-center">
-                  {activeApp.icon ? (
-                    <img
-                      src={activeApp.icon}
-                      alt={`${activeApp.name} icon preview`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                        const fallback = e.target.nextSibling;
-                        if (fallback) fallback.style.display = "flex";
-                      }}
+              {/* App icon inside a mini phone frame + platform chips */}
+              <div className="flex flex-col items-center gap-3 shrink-0">
+                <div className="relative w-40 h-40 flex items-center justify-center rounded-[2rem] bg-gradient-to-br from-purple-500/15 to-fuchsia-500/10 border border-neutral-200 dark:border-neutral-800 shadow-inner">
+                  {/* phone bezel */}
+                  <div className="relative w-24 h-32 rounded-[1.4rem] bg-neutral-950 border-[3px] border-neutral-800 shadow-xl flex items-center justify-center overflow-hidden">
+                    <span className="absolute top-1.5 left-1/2 -translate-x-1/2 w-8 h-1.5 rounded-full bg-neutral-800 z-10" />
+                    <AppIcon
+                      app={activeApp}
+                      rounded="rounded-2xl"
+                      className="w-16 h-16 shadow-lg border border-white/10"
                     />
-                  ) : null}
-                  <div
-                    className="absolute inset-0 flex items-center justify-center text-3xl font-black text-blue-500 bg-blue-500/10"
-                    style={{ display: activeApp.icon ? "none" : "flex" }}
-                  >
-                    {activeApp.name.charAt(0)}
                   </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {(activeApp.platform === "both" || activeApp.platform === "android" || !activeApp.platform) && (
+                    <span className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold bg-[#3ddc84]/15 text-[#20a366] dark:text-[#3ddc84] border border-[#3ddc84]/30">
+                      <FaAndroid className="w-3 h-3" /> Android
+                    </span>
+                  )}
+                  {(activeApp.platform === "both" || activeApp.iosLink) && (
+                    <span className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold bg-neutral-500/10 text-neutral-700 dark:text-neutral-200 border border-neutral-400/30">
+                      <FaApple className="w-3 h-3" /> iOS
+                    </span>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -184,13 +208,13 @@ export function LiveApps() {
 
 
           {/* Dots Indicator */}
-          <div className="flex justify-center gap-1.5 mt-6">
-            {appCarouselData.map((_, idx) => (
+          <div className="flex flex-wrap justify-center gap-1.5 mt-6">
+            {apps.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setActiveIdx(idx)}
                 className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
-                  activeIdx === idx ? "w-5 bg-blue-500" : "bg-neutral-300 dark:bg-neutral-700"
+                  safeIdx === idx ? "w-5 bg-purple-500" : "bg-neutral-300 dark:bg-neutral-700"
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />

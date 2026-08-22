@@ -7,7 +7,7 @@ import { FiCheckCircle } from "react-icons/fi";
 
 export function WhyHireMe() {
   return (
-    <section id="why-hire-me" className="py-20 bg-white dark:bg-black transition-colors duration-300">
+    <section id="why-hire-me" className="py-14 sm:py-20 bg-white dark:bg-black transition-colors duration-300">
       <div className="max-w-5xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-16">
@@ -25,7 +25,7 @@ export function WhyHireMe() {
             <FadeIn key={idx} delay={idx * 0.05} direction="up">
               <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-950/20 backdrop-blur-sm flex items-start gap-4 hover:border-neutral-350 dark:hover:border-neutral-800 transition-all">
                 {/* Icon marker */}
-                <span className="p-2 bg-blue-500/10 text-blue-500 rounded-xl shrink-0 mt-1">
+                <span className="p-2 bg-purple-500/10 text-purple-500 rounded-xl shrink-0 mt-1">
                   <FiCheckCircle className="w-5 h-5" />
                 </span>
 

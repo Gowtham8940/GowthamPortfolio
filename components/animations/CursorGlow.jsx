@@ -32,7 +32,7 @@ export function CursorGlow() {
         left: glowX,
         top: glowY,
       }}
-      className="pointer-events-none fixed z-40 h-[300px] w-[300px] rounded-full bg-blue-500/8 dark:bg-blue-500/5 blur-[120px] transition-opacity duration-500 hidden md:block"
+      className="pointer-events-none fixed z-40 h-[300px] w-[300px] rounded-full bg-purple-500/8 dark:bg-purple-500/5 blur-[120px] transition-opacity duration-500 hidden md:block"
     />
   );
 }
@@ -59,7 +59,7 @@ export function CardSpotlightWrapper({ children, className = "" }) {
         className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition-opacity duration-300"
         style={{
           opacity,
-          background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, rgba(59, 130, 246, 0.08), transparent 80%)`,
+          background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, rgba(168, 85, 247, 0.08), transparent 80%)`,
         }}
       />
       {children}

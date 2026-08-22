@@ -7,7 +7,7 @@ import { FiTrendingDown, FiZap, FiActivity } from "react-icons/fi";
 
 export function Performance() {
   return (
-    <section id="performance" className="py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
+    <section id="performance" className="py-14 sm:py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
       <div className="max-w-5xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-16">
@@ -26,7 +26,7 @@ export function Performance() {
           <FadeIn delay={0.1} direction="up">
             <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-900 bg-white dark:bg-black/45 backdrop-blur-sm h-full flex flex-col justify-between text-left">
               <div>
-                <span className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 inline-block mb-4">
+                <span className="p-2.5 rounded-xl bg-purple-500/10 text-purple-500 inline-block mb-4">
                   <FiTrendingDown className="w-5 h-5" />
                 </span>
                 <h3 className="text-lg font-bold text-neutral-850 dark:text-neutral-100">
@@ -73,8 +73,8 @@ export function Performance() {
                   <div className="text-2xl font-black text-neutral-450 dark:text-neutral-600 font-mono mt-1">45 FPS</div>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-blue-500">Target</span>
-                  <div className="text-2xl font-black text-blue-500 font-mono mt-1">60 FPS</div>
+                  <span className="text-[10px] uppercase font-bold text-purple-500">Target</span>
+                  <div className="text-2xl font-black text-purple-500 font-mono mt-1">60 FPS</div>
                 </div>
               </div>
             </div>

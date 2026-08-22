@@ -426,23 +426,29 @@ export default function Handbook() {
             <div className="main-inner">
               {/* Page Title */}
               <div className="page-header">
-                <h1 className="page-title">React & Frontend Interview Handbook</h1>
-                <p className="page-subtitle">A comprehensive guide with 250+ questions, code playgrounds, and progress tracking.</p>
+                <span className="hb-hero-badge"><FiBookOpen size={13} /> Interview Prep Vault</span>
+                <h1 className="page-title">React &amp; Frontend Interview Handbook</h1>
+                <p className="page-subtitle">A comprehensive, self-hostable guide — questions, live code playgrounds, architecture diagrams, and saved progress that lives in your browser.</p>
+                <div className="hb-hero-stats">
+                  <div className="hb-hero-stat"><strong>{stats.total}+</strong><span>Questions</span></div>
+                  <div className="hb-hero-stat"><strong>{handbookData.length}</strong><span>Topics</span></div>
+                  <div className="hb-hero-stat"><strong>{stats.percent}%</strong><span>Your Progress</span></div>
+                </div>
               </div>
 
               {/* ── Architecture Diagrams Dashboard ── */}
               <div className="mb-8 p-6 rounded-2xl border border-neutral-250 dark:border-neutral-850 bg-white dark:bg-[#0c101a]/30 shadow-sm">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-450 dark:text-neutral-400 mb-4 flex items-center gap-2 select-none">
-                  <FiBookOpen className="text-blue-500" /> Architecture Diagrams & JavaScript Reference
+                  <FiBookOpen className="text-purple-500" /> Architecture Diagrams & JavaScript Reference
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div 
-                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
+                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-purple-500/50 transition-all duration-300 shadow-sm"
                     onClick={() => setSelectedImage("/images/new_react_native.jpg")}
                   >
                     <div className="p-3 bg-neutral-100 dark:bg-neutral-950/60 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-[10px] uppercase font-bold text-neutral-400 select-none">
                       <span>The New React Native (Fabric/TurboModules)</span>
-                      <span className="text-[9px] text-blue-500 font-semibold group-hover:underline">Zoom</span>
+                      <span className="text-[9px] text-purple-500 font-semibold group-hover:underline">Zoom</span>
                     </div>
                     <div className="p-2 flex items-center justify-center">
                       <img src="/images/new_react_native.jpg" alt="New React Native Architecture" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
@@ -450,12 +456,12 @@ export default function Handbook() {
                   </div>
 
                   <div 
-                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-855 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
+                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-855 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-purple-500/50 transition-all duration-300 shadow-sm"
                     onClick={() => setSelectedImage("/images/react_native_arch.jpg")}
                   >
                     <div className="p-3 bg-neutral-100 dark:bg-neutral-950/60 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-[10px] uppercase font-bold text-neutral-400 select-none">
                       <span>React Native JSI & Bridge Layout</span>
-                      <span className="text-[9px] text-blue-500 font-semibold group-hover:underline">Zoom</span>
+                      <span className="text-[9px] text-purple-500 font-semibold group-hover:underline">Zoom</span>
                     </div>
                     <div className="p-2 flex items-center justify-center">
                       <img src="/images/react_native_arch.jpg" alt="React Native JSI & Bridge Layout" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
@@ -463,12 +469,12 @@ export default function Handbook() {
                   </div>
 
                   <div 
-                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
+                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-purple-500/50 transition-all duration-300 shadow-sm"
                     onClick={() => setSelectedImage("/images/fabric_renderer_flow.jpg")}
                   >
                     <div className="p-3 bg-neutral-100 dark:bg-neutral-950/60 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-[10px] uppercase font-bold text-neutral-400 select-none">
                       <span>Fabric Renderer Flow & UI Updates</span>
-                      <span className="text-[9px] text-blue-500 font-semibold group-hover:underline">Zoom</span>
+                      <span className="text-[9px] text-purple-500 font-semibold group-hover:underline">Zoom</span>
                     </div>
                     <div className="p-2 flex items-center justify-center">
                       <img src="/images/fabric_renderer_flow.jpg" alt="Fabric Renderer Flow" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
@@ -476,12 +482,12 @@ export default function Handbook() {
                   </div>
 
                   <div 
-                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-blue-500/50 transition-all duration-300 shadow-sm"
+                    className="relative rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-850 bg-neutral-50 dark:bg-neutral-950/20 group cursor-pointer hover:border-purple-500/50 transition-all duration-300 shadow-sm"
                     onClick={() => setSelectedImage("/images/built in functions js.jpeg")}
                   >
                     <div className="p-3 bg-neutral-100 dark:bg-neutral-950/60 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-[10px] uppercase font-bold text-neutral-400 select-none">
                       <span>JavaScript Built-in Functions Reference</span>
-                      <span className="text-[9px] text-blue-500 font-semibold group-hover:underline">Zoom</span>
+                      <span className="text-[9px] text-purple-500 font-semibold group-hover:underline">Zoom</span>
                     </div>
                     <div className="p-2 flex items-center justify-center">
                       <img src="/images/built in functions js.jpeg" alt="JavaScript Built-in Functions" className="w-full aspect-[16/9] object-contain rounded-lg group-hover:scale-[1.01] transition-transform duration-300" />
@@ -491,7 +497,7 @@ export default function Handbook() {
                 <div className="flex justify-center mt-5">
                   <button 
                     onClick={() => setShowRecall(!showRecall)} 
-                    className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer text-[11px] uppercase tracking-wider"
+                    className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer text-[11px] uppercase tracking-wider"
                   >
                     🚀 {showRecall ? "Hide Recall Cheat Sheet" : "Show Recall Cheat Sheet"}
                   </button>
@@ -504,7 +510,7 @@ export default function Handbook() {
                     <div className="flex flex-wrap gap-2 pb-4 border-b border-neutral-200/60 dark:border-neutral-800/60 select-none">
                       <button
                         onClick={() => setRecallTab("core")}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${recallTab === "core" ? "bg-blue-500 text-white shadow-sm" : "bg-neutral-100 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"}`}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${recallTab === "core" ? "bg-purple-500 text-white shadow-sm" : "bg-neutral-100 dark:bg-neutral-900/50 text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200"}`}
                       >
                         🚀 JS & React Core (30)
                       </button>
@@ -532,10 +538,10 @@ export default function Handbook() {
                     {recallTab === "core" && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {recallTips.map((tip, idx) => (
-                          <div key={idx} className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/20 hover:border-blue-500/30 dark:hover:border-blue-500/20 transition-all duration-300 shadow-sm flex flex-col justify-between group">
+                          <div key={idx} className="p-5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950/20 hover:border-purple-500/30 dark:hover:border-purple-500/20 transition-all duration-300 shadow-sm flex flex-col justify-between group">
                             <div>
                               <div className="flex items-center gap-2 mb-2.5 select-none">
-                                <span className="w-1.5 h-3.5 rounded-full bg-blue-500" />
+                                <span className="w-1.5 h-3.5 rounded-full bg-purple-500" />
                                 <h4 className="text-xs sm:text-sm font-bold text-neutral-850 dark:text-neutral-100">{tip.term}</h4>
                               </div>
                               <p className="text-xs sm:text-sm text-neutral-550 dark:text-neutral-400 leading-relaxed mb-4">
@@ -865,8 +871,8 @@ const handbookStyles = `
     --hb-text-muted: #94a3b8;
     --hb-border: #e2e8f0;
     --hb-border-light: #f1f5f9;
-    --hb-accent: #3b82f6;
-    --hb-accent-glow: rgba(59,130,246,0.08);
+    --hb-accent: #a855f7;
+    --hb-accent-glow: rgba(168,85,247,0.08);
     --hb-green: #10b981;
     --hb-red: #f43f5e;
     --hb-sidebar-w: 300px;
@@ -885,8 +891,8 @@ const handbookStyles = `
     --hb-text-muted: #475569;
     --hb-border: #1e293b;
     --hb-border-light: #151d2e;
-    --hb-accent: #60a5fa;
-    --hb-accent-glow: rgba(96,165,250,0.06);
+    --hb-accent: #c084fc;
+    --hb-accent-glow: rgba(192,132,252,0.1);
   }
 
   /* ── Root ── */
@@ -974,11 +980,11 @@ const handbookStyles = `
 
   .profile-avatar {
     width: 40px; height: 40px; border-radius: 12px;
-    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    background: linear-gradient(135deg, #a855f7, #6366f1);
     display: flex; align-items: center; justify-content: center;
     font-weight: 800; color: #fff; font-size: 1rem;
     font-family: var(--hb-font-mono);
-    box-shadow: 0 4px 12px rgba(59,130,246,0.25);
+    box-shadow: 0 4px 12px rgba(168,85,247,0.25);
   }
 
   .profile-name { font-size: 0.85rem; font-weight: 700; margin: 0; }
@@ -994,7 +1000,7 @@ const handbookStyles = `
   .progress-top { display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: 700; margin-bottom: 8px; color: var(--hb-text-secondary); }
   .progress-pct { color: var(--hb-accent); }
   .progress-bar-bg { height: 6px; border-radius: 6px; background: var(--hb-border); overflow: hidden; margin-bottom: 6px; }
-  .progress-bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #3b82f6, #6366f1); transition: width 0.4s ease; }
+  .progress-bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #a855f7, #6366f1); transition: width 0.4s ease; }
   .progress-label { font-size: 0.65rem; color: var(--hb-text-muted); font-weight: 600; }
 
   /* Search */
@@ -1190,26 +1196,55 @@ const handbookStyles = `
 
   /* Page Header */
   .page-header {
-    margin-bottom: 48px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--hb-border);
+    position: relative;
+    margin-bottom: 40px;
+    padding: 28px 28px 26px;
+    border-radius: 22px;
+    border: 1px solid var(--hb-border);
+    overflow: hidden;
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgba(168,85,247,0.14), transparent 55%),
+      radial-gradient(120% 140% at 0% 100%, rgba(217,70,239,0.1), transparent 55%),
+      var(--hb-bg-card);
+  }
+
+  .hb-hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 999px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.03em;
+    color: var(--hb-accent);
+    background: var(--hb-accent-glow);
+    border: 1px solid color-mix(in srgb, var(--hb-accent) 30%, transparent);
+    margin-bottom: 14px;
   }
 
   .page-title {
-    font-size: 1.8rem; font-weight: 800;
-    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    font-size: 2rem; font-weight: 800;
+    background: linear-gradient(135deg, #a855f7, #d946ef 60%, #6366f1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin: 0 0 8px;
-    line-height: 1.2;
+    margin: 0 0 10px;
+    line-height: 1.15;
   }
 
-  .page-subtitle { font-size: 0.9rem; color: var(--hb-text-secondary); margin: 0; line-height: 1.5; }
+  .page-subtitle { font-size: 0.9rem; color: var(--hb-text-secondary); margin: 0; line-height: 1.5; max-width: 620px; }
+
+  .hb-hero-stats { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 22px; }
+  .hb-hero-stat { display: flex; flex-direction: column; }
+  .hb-hero-stat strong {
+    font-size: 1.35rem; font-weight: 800; line-height: 1;
+    background: linear-gradient(135deg, #a855f7, #d946ef);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hb-hero-stat span { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--hb-text-muted); margin-top: 5px; }
 
   @media (max-width: 768px) {
-    .page-title { font-size: 1.3rem; }
+    .page-header { padding: 22px 18px; border-radius: 18px; }
+    .page-title { font-size: 1.45rem; }
     .page-subtitle { font-size: 0.8rem; }
+    .hb-hero-stats { gap: 16px; margin-top: 18px; }
+    .hb-hero-stat strong { font-size: 1.15rem; }
   }
 
   /* Empty State */
@@ -1245,7 +1280,7 @@ const handbookStyles = `
     white-space: nowrap;
   }
   .badge-beginner { background: rgba(16,185,129,0.08); color: #10b981; border-color: rgba(16,185,129,0.2); }
-  .badge-intermediate { background: rgba(59,130,246,0.08); color: #3b82f6; border-color: rgba(59,130,246,0.2); }
+  .badge-intermediate { background: rgba(168,85,247,0.08); color: #a855f7; border-color: rgba(168,85,247,0.2); }
   .badge-advanced { background: rgba(245,158,11,0.08); color: #f59e0b; border-color: rgba(245,158,11,0.2); }
   .badge-expert { background: rgba(244,63,94,0.08); color: #f43f5e; border-color: rgba(244,63,94,0.2); }
   .diff-line { flex: 1; height: 1px; background: var(--hb-border); }

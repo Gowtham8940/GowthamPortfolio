@@ -2,15 +2,18 @@
 
 import React, { useState } from "react";
 import { youtubeVideosData } from "@/lib/data/certifications";
+import { useFeed } from "@/lib/hooks/useFeed";
 import { FadeIn } from "../animations/FadeIn";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { FiYoutube, FiPlay, FiClock, FiEye } from "react-icons/fi";
 
 export function YouTube() {
   const [activeVideo, setActiveVideo] = useState(null);
+  const { data: videos, meta } = useFeed("/api/feeds/youtube", "videos", youtubeVideosData);
+  const isLive = meta.source === "live";
 
   return (
-    <section id="youtube" className="py-20 bg-white dark:bg-black transition-colors duration-300">
+    <section id="youtube" className="py-14 sm:py-20 bg-white dark:bg-black transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-12">
@@ -27,11 +30,17 @@ export function YouTube() {
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-3 max-w-xl mx-auto">
             Tutorials and coding challenges from my YouTube channel <strong className="text-neutral-900 dark:text-neutral-100">@learn_with_gowtham</strong>, focusing on performance, custom UI, and native bridge modules.
           </p>
+          {isLive && (
+            <span className="inline-flex items-center gap-1.5 mt-4 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-500 border border-red-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              Live from YouTube
+            </span>
+          )}
         </FadeIn>
- 
+
         {/* Video Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {youtubeVideosData.map((video, idx) => (
+          {videos.map((video, idx) => (
             <FadeIn key={video.id} delay={idx * 0.05} direction="up">
               <div
                 onClick={() => setActiveVideo(video)}
@@ -59,32 +68,38 @@ export function YouTube() {
                   </span>
 
                   
-                  {/* Duration badge */}
-                  <span className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/85 text-[10px] font-mono text-white font-semibold flex items-center gap-1">
-                    <FiClock className="w-3 h-3" />
-                    {video.duration}
-                  </span>
+                  {/* Duration badge (only when known) */}
+                  {video.duration && (
+                    <span className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-black/85 text-[10px] font-mono text-white font-semibold flex items-center gap-1">
+                      <FiClock className="w-3 h-3" />
+                      {video.duration}
+                    </span>
+                  )}
 
                   {/* Category label */}
-                  <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-blue-500/90 text-[9px] font-semibold text-white uppercase tracking-wider">
+                  <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-purple-500/90 text-[9px] font-semibold text-white uppercase tracking-wider">
                     {video.category}
                   </span>
                 </div>
 
                 {/* Details */}
                 <div className="p-4 text-left">
-                  <h3 className="text-xs sm:text-sm font-bold text-neutral-800 dark:text-neutral-200 line-clamp-2 leading-snug group-hover:text-blue-500 transition-colors">
+                  <h3 className="text-xs sm:text-sm font-bold text-neutral-800 dark:text-neutral-200 line-clamp-2 leading-snug group-hover:text-purple-500 transition-colors">
                     {video.title}
                   </h3>
                   
                   {/* Metadata view stats */}
                   <div className="flex items-center gap-3 text-[10px] text-neutral-400 font-mono mt-3">
-                    <span className="flex items-center gap-1">
-                      <FiEye className="w-3 h-3" />
-                      {video.views} views
-                    </span>
-                    <span>•</span>
-                    <span>Youtube Tutorial</span>
+                    {video.views && (
+                      <>
+                        <span className="flex items-center gap-1">
+                          <FiEye className="w-3 h-3" />
+                          {video.views} views
+                        </span>
+                        <span>•</span>
+                      </>
+                    )}
+                    <span>{video.date || "YouTube Tutorial"}</span>
                   </div>
                 </div>
               </div>

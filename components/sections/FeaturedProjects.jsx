@@ -23,7 +23,7 @@ export function FeaturedProjects() {
     : projects.filter(p => p.category.includes(activeCategory.split(" & ")[0]));
 
   return (
-    <section id="projects" className="py-20 bg-white dark:bg-black transition-colors duration-300">
+    <section id="projects" className="py-14 sm:py-20 bg-white dark:bg-black transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-12">
@@ -58,7 +58,7 @@ export function FeaturedProjects() {
               <CardSpotlightWrapper className="h-full rounded-2xl border border-neutral-200 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-950/20 backdrop-blur-sm p-6 flex flex-col justify-between hover:scale-[1.02] cursor-pointer group">
                 <div onClick={() => setSelectedProject(project)}>
                   {/* Category badge */}
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-purple-500">
                     {project.category}
                   </span>
 
@@ -102,7 +102,7 @@ export function FeaturedProjects() {
                   </span>
                   <button
                     onClick={() => setSelectedProject(project)}
-                    className="text-xs font-bold text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-purple-500 hover:text-purple-600 dark:hover:text-purple-400 flex items-center gap-1 cursor-pointer"
                   >
                     View Details
                     <FiArrowRight className="w-3.5 h-3.5" />
@@ -147,7 +147,7 @@ export function FeaturedProjects() {
                               />
                             ) : null}
                             <div
-                              className="absolute inset-0 flex items-center justify-center text-xl font-black text-white bg-gradient-to-br from-blue-500 to-purple-600"
+                              className="absolute inset-0 flex items-center justify-center text-xl font-black text-white bg-gradient-to-br from-purple-500 to-purple-600"
                               style={{ display: iconUrl ? "none" : "flex" }}
                             >
                               {selectedProject.title.charAt(0)}
@@ -233,7 +233,7 @@ export function FeaturedProjects() {
                     {selectedProject.features && (
                       <div>
                         <h4 className="text-sm font-bold text-neutral-800 dark:text-neutral-200 mb-2 flex items-center gap-1.5">
-                          <FiCpu className="text-blue-500" /> Key Features
+                          <FiCpu className="text-purple-500" /> Key Features
                         </h4>
                         <ul className="list-disc pl-4 space-y-1 text-xs text-neutral-550 dark:text-neutral-450">
                           {selectedProject.features.map((feat, i) => (

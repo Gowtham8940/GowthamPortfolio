@@ -8,7 +8,7 @@ import { FiMessageSquare } from "react-icons/fi";
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300 overflow-hidden">
+    <section id="testimonials" className="py-14 sm:py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-16">

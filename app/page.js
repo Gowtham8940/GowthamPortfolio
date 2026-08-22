@@ -5,6 +5,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CommandPalette from "@/components/layout/CommandPalette";
 import { CursorGlow } from "@/components/animations/CursorGlow";
+import { SkyAmbient } from "@/components/animations/SkyAmbient";
+import { ThemeTransition } from "@/components/animations/ThemeTransition";
 import useKeyboardShortcuts from "@/lib/hooks/useKeyboardShortcuts";
 
 // Import Sections
@@ -23,7 +25,6 @@ import Certifications from "@/components/sections/Certifications";
 import YouTube from "@/components/sections/YouTube";
 import GitHub from "@/components/sections/GitHub";
 import Blog from "@/components/sections/Blog";
-import DevConsole from "@/components/sections/DevConsole";
 import WhyHireMe from "@/components/sections/WhyHireMe";
 import RecruiterSection from "@/components/sections/RecruiterSection";
 import Contact from "@/components/sections/Contact";
@@ -33,7 +34,13 @@ export default function Home() {
   useKeyboardShortcuts();
 
   return (
-    <div className="flex flex-col min-h-screen overflow-x-hidden select-none bg-white dark:bg-black text-neutral-850 dark:text-neutral-200 transition-colors duration-300">
+    <div className="relative flex flex-col min-h-screen overflow-x-hidden select-none text-neutral-850 dark:text-neutral-200 transition-colors duration-300">
+      {/* Persistent celestial starfield (dark mode) */}
+      <SkyAmbient />
+
+      {/* Solar-system day/night warp on theme toggle */}
+      <ThemeTransition />
+
       {/* Global visual mouse glow */}
       <CursorGlow />
 
@@ -44,7 +51,7 @@ export default function Home() {
       <Navbar />
 
       {/* Main content body */}
-      <main className="flex-grow flex flex-col">
+      <main className="relative z-10 flex-grow flex flex-col">
         {/* Landing View & Stats */}
         <Hero />
         <HeroStats />
@@ -74,8 +81,7 @@ export default function Home() {
         <GitHub />
         <Blog />
 
-        {/* Recruiter info & fun shell */}
-        <DevConsole />
+        {/* Recruiter info */}
         <WhyHireMe />
         <RecruiterSection />
         
@@ -84,7 +90,9 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <Footer />
+      <div className="relative z-10">
+        <Footer />
+      </div>
     </div>
   );
 }

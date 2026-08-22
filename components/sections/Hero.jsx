@@ -5,17 +5,19 @@ import { motion, AnimatePresence } from "motion/react";
 import { Particles } from "../animations/Particles";
 import { MagneticButton } from "../animations/MagneticButton";
 import { FadeIn } from "../animations/FadeIn";
-import { FiDownload, FiArrowRight, FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
+import { AppIcon } from "@/components/ui/AppIcon";
+import { FiDownload, FiArrowRight, FiGithub, FiLinkedin, FiMail, FiGlobe, FiTv, FiMonitor } from "react-icons/fi";
+import { FaApple, FaAndroid } from "react-icons/fa";
 import { recruiterBriefData } from "@/lib/data/certifications";
 
 const liveApps = [
-  { name: "MAAZTER", bg: "from-purple-600 to-indigo-700", color: "#8B5CF6", description: "Samacheer LMS Portal", icon: "/api/app-icon?platform=ios&appId=1606521457" },
-  { name: "e-Khool LMS", bg: "from-blue-600 to-cyan-500", color: "#3B82F6", description: "Enterprise Offline LMS", icon: "/api/app-icon?platform=ios&appId=6740979534" },
-  { name: "AAEB eSchool", bg: "from-orange-600 to-amber-500", color: "#F59E0B", description: "Accessibility A11y Portal", icon: "/api/app-icon?platform=android&appId=com.aaeb" },
-  { name: "TVET eSchool", bg: "from-green-600 to-emerald-500", color: "#10B981", description: "Vocational Training Hub", icon: "/api/app-icon?platform=android&appId=com.tvetcollege" },
-  { name: "Suya Mobiles", bg: "from-red-600 to-rose-500", color: "#F43F5E", description: "Mobile Repair Shop E-comm", icon: "/api/app-icon?platform=android&appId=com.mobifix" },
-  { name: "Uniliv Learn", bg: "from-teal-600 to-cyan-700", color: "#0D9488", description: "Student Accommodation Hub", icon: "/api/app-icon?platform=android&appId=com.uniliv" },
-  { name: "Magic Billion", bg: "from-violet-600 to-fuchsia-600", color: "#8B5CF6", description: "Ausbildung Training System", icon: "/api/app-icon?platform=android&appId=com.magicbillion" }
+  { name: "MAAZTER", bg: "from-purple-600 to-indigo-700", color: "#8B5CF6", description: "Samacheer LMS Portal", iconUrl: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/1a/e9/89/1ae9893f-eee8-86b7-a26b-fac295109b69/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg", icon: "/api/app-icon?platform=ios&appId=1606521457" },
+  { name: "e-Khool LMS", bg: "from-purple-600 to-cyan-500", color: "#3B82F6", description: "Enterprise Offline LMS", iconUrl: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/59/44/9a/59449a30-8a40-dc71-bea1-baafde60a7bb/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg", icon: "/api/app-icon?platform=ios&appId=6740979534" },
+  { name: "AAEB eSchool", bg: "from-orange-600 to-amber-500", color: "#F59E0B", description: "Accessibility A11y Portal", iconUrl: "https://play-lh.googleusercontent.com/lWB_7UNu7LuthiZgL38BXvOLa1cOwHJXCUyIxc0EtB73aeX8ICx5qmOzgdRuvTHjS76Oi-Y0VgCb7UMORrs41w=s256", icon: "/api/app-icon?platform=android&appId=com.aaeb" },
+  { name: "TVET eSchool", bg: "from-green-600 to-emerald-500", color: "#10B981", description: "Vocational Training Hub", iconUrl: "https://play-lh.googleusercontent.com/4nvIK7axvlTKIg9oytiHVm52u6ijuVXkkdiwbduZRT9UwTm3Sl3HBqE6yKHrAUPvSboy9emjGAtNO6q6bTRf=s256", icon: "/api/app-icon?platform=android&appId=com.tvetcollege" },
+  { name: "Suya Mobiles", bg: "from-red-600 to-rose-500", color: "#F43F5E", description: "Mobile Repair Shop E-comm", iconUrl: "https://play-lh.googleusercontent.com/WELHPKX0KHvQzJfarES3FbqSEm4hReFoIn_o9LkNN5W_qnByI6vla_Yd_4PH5hcD9JDrmUhxkMzZc-ESy_Y8bw=s256", icon: "/api/app-icon?platform=android&appId=com.mobifix" },
+  { name: "Uniliv Learn", bg: "from-teal-600 to-cyan-700", color: "#0D9488", description: "Student Accommodation Hub", iconUrl: "https://play-lh.googleusercontent.com/qNOWDpUdcW4OO8nIVyhz5qwv_BS-tyk-p4_MvWd6VPCGF7DRzq2hA1l4VOCZ7BZsOeO3VsfxFRkvNmafWyYv=s256", icon: "/api/app-icon?platform=android&appId=com.uniliv" },
+  { name: "Magic Billion", bg: "from-violet-600 to-fuchsia-600", color: "#8B5CF6", description: "Ausbildung Training System", iconUrl: "https://play-lh.googleusercontent.com/K-Q6vKLwkl7B1t3huiWWp9YTuvUGS6Kvo3vKyzdgOYRsHicbsovd29aVb3ayTICCDCI4kE_ce41XZvD3dLb6j_4=s256", icon: "/api/app-icon?platform=android&appId=com.magicbillion" }
 ];
 
 
@@ -73,7 +75,7 @@ export function Hero() {
       <div className="absolute inset-0 grid-bg-pattern z-0 opacity-40 dark:opacity-20 pointer-events-none" />
 
       {/* Visual background gradient blobs */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[500px] h-[350px] md:h-[500px] rounded-full bg-blue-500/10 dark:bg-blue-500/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[500px] h-[350px] md:h-[500px] rounded-full bg-purple-500/10 dark:bg-purple-500/5 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[350px] md:w-[550px] h-[350px] md:h-[550px] rounded-full bg-purple-500/10 dark:bg-purple-500/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 w-full">
@@ -81,7 +83,7 @@ export function Hero() {
         <div className="lg:col-span-7 flex flex-col items-start text-left gap-6">
           {/* Badge */}
           <FadeIn delay={0.1} direction="up">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Available for immediate hires (15 Days Notice)
             </span>
@@ -91,7 +93,7 @@ export function Hero() {
           <FadeIn delay={0.2} direction="up">
             <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight">
               Crafting High-Performance <br />
-              <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-purple-500 via-fuchsia-500 to-indigo-500 bg-clip-text text-transparent">
                 React Native Apps
               </span>
             </h1>
@@ -158,6 +160,25 @@ export function Hero() {
             </a>
           </FadeIn>
 
+          {/* Platforms I ship to — mobile-first identity strip */}
+          <FadeIn delay={0.55} direction="up" className="flex flex-wrap items-center gap-2 mt-1">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-400 mr-1">Ships to</span>
+            {[
+              { Icon: FaApple, label: "iOS" },
+              { Icon: FaAndroid, label: "Android" },
+              { Icon: FiGlobe, label: "Web" },
+              { Icon: FiTv, label: "TV" },
+              { Icon: FiMonitor, label: "Desktop" },
+            ].map(({ Icon, label }) => (
+              <span
+                key={label}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20"
+              >
+                <Icon className="w-3.5 h-3.5" /> {label}
+              </span>
+            ))}
+          </FadeIn>
+
           {/* Metro Logs Simulation Panel */}
           <FadeIn delay={0.6} direction="up" className="w-full max-w-lg mt-6">
             <div className="rounded-xl border border-neutral-200 dark:border-neutral-900 bg-neutral-50/50 dark:bg-black/50 backdrop-blur-md p-4 font-mono text-[11px] text-neutral-600 dark:text-neutral-400 shadow-md">
@@ -190,7 +211,7 @@ export function Hero() {
         {/* Right Rotating Phone Column */}
         <div className="lg:col-span-5 flex items-center justify-center relative min-h-[480px]">
           {/* Tag Floating Elements */}
-          <div className="absolute top-12 left-10 p-2.5 glassmorphism rounded-xl border border-neutral-200 dark:border-neutral-900 font-mono text-[10px] text-blue-500 animate-float">
+          <div className="absolute top-12 left-10 p-2.5 glassmorphism rounded-xl border border-neutral-200 dark:border-neutral-900 font-mono text-[10px] text-purple-500 animate-float">
             &lt;View style=&#123;styles.container&#125;&gt;
           </div>
           <div className="absolute bottom-16 right-10 p-2.5 glassmorphism rounded-xl border border-neutral-200 dark:border-neutral-900 font-mono text-[10px] text-purple-500 animate-float" style={{ animationDelay: "2s" }}>
@@ -209,7 +230,7 @@ export function Hero() {
             >
               {/* Camera Notch */}
               <div className="absolute top-3 left-1/2 -translate-x-1/2 w-28 h-5 rounded-full bg-neutral-950 z-20 flex items-center justify-end px-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-900/60" />
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-900/60" />
               </div>
 
               {/* Dynamic screen display */}
@@ -232,25 +253,11 @@ export function Hero() {
                     {/* App Display Center */}
                     <div className="flex flex-col items-center justify-center text-center gap-3 py-16 flex-grow">
                       {/* App Icon Mock */}
-                      <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-md shadow-black/25 shrink-0">
-                        {activeApp.icon ? (
-                          <img
-                            src={activeApp.icon}
-                            alt={`${activeApp.name} icon`}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.target.style.display = "none";
-                              e.target.nextSibling.style.display = "flex";
-                            }}
-                          />
-                        ) : null}
-                        <div
-                          className="absolute inset-0 flex items-center justify-center text-2xl font-black text-white"
-                          style={{ display: activeApp.icon ? "none" : "flex" }}
-                        >
-                          {activeApp.name.charAt(0)}
-                        </div>
-                      </div>
+                      <AppIcon
+                        app={activeApp}
+                        rounded="rounded-2xl"
+                        className="w-16 h-16 bg-white/10 backdrop-blur-md border border-white/20 shadow-md shadow-black/25 shrink-0"
+                      />
 
                       <div className="flex flex-col">
                         <span className="text-xl font-bold tracking-tight text-white">{activeApp.name}</span>

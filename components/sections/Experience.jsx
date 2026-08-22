@@ -7,7 +7,7 @@ import { FiBriefcase, FiMapPin, FiCalendar, FiCheck } from "react-icons/fi";
 
 export function Experience() {
   return (
-    <section id="experience" className="py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
+    <section id="experience" className="py-14 sm:py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-16">
@@ -35,7 +35,7 @@ export function Experience() {
               </div>
 
               {/* Timeline bubble */}
-              <div className="absolute -left-[41px] md:-left-[57px] top-1 p-2 rounded-full border border-neutral-250 dark:border-neutral-800 bg-white dark:bg-black text-blue-500 shadow-md">
+              <div className="absolute -left-[41px] md:-left-[57px] top-1 p-2 rounded-full border border-neutral-250 dark:border-neutral-800 bg-white dark:bg-black text-purple-500 shadow-md">
                 <FiBriefcase className="w-3.5 h-3.5" />
               </div>
 
@@ -66,7 +66,7 @@ export function Experience() {
                   <div className="flex flex-col gap-2">
                     {job.highlights.map((highlight, hIdx) => (
                       <div key={hIdx} className="flex items-start gap-2 text-xs text-neutral-550 dark:text-neutral-450 leading-relaxed">
-                        <span className="p-0.5 rounded-full bg-blue-500/10 text-blue-500 mt-0.5 shrink-0">
+                        <span className="p-0.5 rounded-full bg-purple-500/10 text-purple-500 mt-0.5 shrink-0">
                           <FiCheck className="w-3 h-3" />
                         </span>
                         <span>{highlight}</span>

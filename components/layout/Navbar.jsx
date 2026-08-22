@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { navLinks } from "@/lib/data/certifications";
-import { FiSun, FiMoon, FiSearch, FiMenu, FiX } from "react-icons/fi";
+import { FiSun, FiMoon, FiSearch, FiMenu, FiX, FiBookOpen, FiArrowUpRight } from "react-icons/fi";
 import { MagneticButton } from "../animations/MagneticButton";
+
+const HANDBOOK_URL = "/react-interview-handbook";
 
 export function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -15,34 +17,30 @@ export function Navbar() {
 
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     if (clickCount > 0) {
-      const timer = setTimeout(() => {
-        setClickCount(0);
-      }, 1000);
+      const timer = setTimeout(() => setClickCount(0), 1000);
       return () => clearTimeout(timer);
     }
   }, [clickCount]);
 
   if (!mounted) return null;
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
+  // Tapping the name still scrolls to top; a quick triple-tap jumps to the
+  // handbook (now also reachable via the visible "Handbook" button).
   const handleNameClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     setClickCount((prev) => {
       const next = prev + 1;
       if (next === 3) {
-        window.open("/react-interview-handbook", "_blank");
+        window.open(HANDBOOK_URL, "_blank");
         return 0;
       }
       return next;
@@ -57,17 +55,19 @@ export function Navbar() {
           : "py-5 bg-transparent"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-5 sm:px-6 flex items-center justify-between gap-4">
         {/* Logo */}
         <button
           onClick={handleNameClick}
-          className="text-xl font-bold tracking-tight text-neutral-800 dark:text-neutral-100 flex items-center gap-2 cursor-pointer bg-transparent border-none p-0 outline-none select-none"
+          title="Tip: triple-tap for my Interview Handbook"
+          className="text-lg sm:text-xl font-bold tracking-tight text-neutral-800 dark:text-neutral-100 flex items-center gap-2 cursor-pointer bg-transparent border-none p-0 outline-none select-none shrink-0"
         >
-          GOWTHAM<span className="text-blue-500 font-mono text-[10px] bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">RN.DEV</span>
+          GOWTHAM
+          <span className="text-purple-500 font-mono text-[10px] bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">RN.DEV</span>
         </button>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Desktop Links (lg+) */}
+        <div className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navLinks.map((link) => (
             <a
               key={link.name}
@@ -79,17 +79,27 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* Action Controls */}
-        <div className="hidden md:flex items-center gap-4">
+        {/* Action Controls (lg+) */}
+        <div className="hidden lg:flex items-center gap-3">
+          {/* Handbook link — the discoverable version of the name easter-egg */}
+          <a
+            href={HANDBOOK_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 shadow-md shadow-purple-600/25 transition-all"
+          >
+            <FiBookOpen className="w-3.5 h-3.5" />
+            Handbook
+            <FiArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
+
           {/* Cmd + K trigger */}
           <button
-            onClick={() => {
-              window.dispatchEvent(new Event("toggle-command-palette"));
-            }}
+            onClick={() => window.dispatchEvent(new Event("toggle-command-palette"))}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-xs text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all cursor-pointer"
           >
             <FiSearch />
-            <span>Search</span>
+            <span className="hidden xl:inline">Search</span>
             <kbd className="font-mono text-[10px] bg-neutral-200 dark:bg-neutral-800 px-1.5 py-0.5 rounded">⌘K</kbd>
           </button>
 
@@ -105,9 +115,8 @@ export function Navbar() {
           </MagneticButton>
         </div>
 
-        {/* Mobile controls toggle */}
-        <div className="flex md:hidden items-center gap-3">
-          {/* Theme Toggle for Mobile */}
+        {/* Mobile / tablet controls (below lg) */}
+        <div className="flex lg:hidden items-center gap-2.5">
           <button
             onClick={toggleTheme}
             className="p-2 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400"
@@ -115,8 +124,6 @@ export function Navbar() {
           >
             {theme === "dark" ? <FiSun className="w-4 h-4" /> : <FiMoon className="w-4 h-4" />}
           </button>
-
-          {/* Hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400"
@@ -129,8 +136,8 @@ export function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed top-[60px] left-0 right-0 bottom-0 bg-white dark:bg-black border-t border-neutral-200 dark:border-neutral-800 p-6 z-40 overflow-y-auto">
-          <div className="flex flex-col gap-6">
+        <div className="lg:hidden fixed top-[56px] left-0 right-0 bottom-0 bg-white dark:bg-black border-t border-neutral-200 dark:border-neutral-800 p-6 z-40 overflow-y-auto">
+          <div className="flex flex-col gap-5">
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -141,12 +148,27 @@ export function Navbar() {
                 {link.name}
               </a>
             ))}
+
+            {/* Handbook */}
+            <a
+              href={HANDBOOK_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between p-3 rounded-xl text-white bg-gradient-to-r from-purple-600 to-fuchsia-600 font-semibold shadow-md shadow-purple-600/25"
+            >
+              <span className="flex items-center gap-2">
+                <FiBookOpen /> React Interview Handbook
+              </span>
+              <FiArrowUpRight />
+            </a>
+
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 window.dispatchEvent(new Event("toggle-command-palette"));
               }}
-              className="flex items-center justify-between p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 mt-4"
+              className="flex items-center justify-between p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400"
             >
               <span className="flex items-center gap-2">
                 <FiSearch />

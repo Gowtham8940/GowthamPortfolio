@@ -52,7 +52,7 @@ export function DevConsole() {
                 if (line.type === "input") {
                   return (
                     <div key={idx} className="flex gap-1.5 items-start">
-                      <span className="text-blue-500 font-bold select-none">&gt;</span>
+                      <span className="text-purple-500 font-bold select-none">&gt;</span>
                       <span className="text-white font-bold">{line.text}</span>
                     </div>
                   );
@@ -80,7 +80,7 @@ export function DevConsole() {
               
               {/* Blinking cursor at current input spot if typing */}
               {activeLineIdx < developerConsoleOutputs.length && (
-                <span className="w-1.5 h-4 bg-blue-500 animate-pulse ml-0.5" />
+                <span className="w-1.5 h-4 bg-purple-500 animate-pulse ml-0.5" />
               )}
             </div>
           </div>

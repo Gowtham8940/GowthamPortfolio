@@ -2,27 +2,37 @@
 
 import React from "react";
 import { mediumBlogsData } from "@/lib/data/certifications";
+import { useFeed } from "@/lib/hooks/useFeed";
 import { FadeIn } from "../animations/FadeIn";
 import { FiBookOpen, FiArrowUpRight, FiClock } from "react-icons/fi";
 
 export function Blog() {
+  const { data: mediumBlogs, meta } = useFeed("/api/feeds/medium", "posts", mediumBlogsData);
+  const isLive = meta.source === "live";
+
   return (
-    <section id="blog" className="py-20 bg-white dark:bg-black transition-colors duration-300">
+    <section id="blog" className="py-14 sm:py-20 bg-white dark:bg-black transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight flex items-center justify-center gap-3">
-            <FiBookOpen className="text-blue-500" />
+            <FiBookOpen className="text-purple-500" />
             Medium Technical Articles
           </h2>
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-3 max-w-xl mx-auto">
             Deep dives into mobile systems architecture, native bridges optimization, and React Native New Architecture upgrades.
           </p>
+          {isLive && (
+            <span className="inline-flex items-center gap-1.5 mt-4 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Live from Medium
+            </span>
+          )}
           <a
             href="https://medium.com/@gowthamjaganthan"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs text-blue-500 hover:text-blue-650 dark:hover:text-blue-400 font-bold mt-4 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-purple-500 hover:text-purple-650 dark:hover:text-purple-400 font-bold mt-4 transition-colors"
           >
             View Medium Profile <FiArrowUpRight className="w-4.5 h-4.5" />
           </a>
@@ -30,7 +40,7 @@ export function Blog() {
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {mediumBlogsData.map((blog, idx) => (
+          {mediumBlogs.map((blog, idx) => (
             <FadeIn key={blog.id} delay={idx * 0.1} direction="up">
               <div
                 onClick={() => window.open(blog.link, "_blank")}
@@ -47,7 +57,7 @@ export function Blog() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-sm sm:text-base font-bold text-neutral-800 dark:text-neutral-250 mt-3 group-hover:text-blue-500 transition-colors leading-snug">
+                  <h3 className="text-sm sm:text-base font-bold text-neutral-800 dark:text-neutral-250 mt-3 group-hover:text-purple-500 transition-colors leading-snug">
                     {blog.title}
                   </h3>
 
@@ -58,7 +68,7 @@ export function Blog() {
                 </div>
 
                 {/* Footer link */}
-                <div className="flex items-center justify-between mt-6 pt-4 border-t border-neutral-100 dark:border-neutral-900/60 text-xs font-semibold text-neutral-400 group-hover:text-blue-500 transition-colors">
+                <div className="flex items-center justify-between mt-6 pt-4 border-t border-neutral-100 dark:border-neutral-900/60 text-xs font-semibold text-neutral-400 group-hover:text-purple-500 transition-colors">
                   <span>{blog.date}</span>
                   <span className="flex items-center gap-0.5">
                     Read Article

@@ -7,7 +7,7 @@ import { FiBookOpen, FiAlertCircle, FiCheckSquare, FiAward } from "react-icons/f
 
 export function CaseStudies() {
   return (
-    <section id="case-studies" className="py-20 bg-white dark:bg-black transition-colors duration-305">
+    <section id="case-studies" className="py-14 sm:py-20 bg-white dark:bg-black transition-colors duration-305">
       <div className="max-w-4xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-16">
@@ -25,7 +25,7 @@ export function CaseStudies() {
               
               {/* Header */}
               <div className="border-b border-neutral-100 dark:border-neutral-900/60 pb-4">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-500">Upgrade Migration</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-500">Upgrade Migration</span>
                 <h3 className="text-xl font-bold text-neutral-850 dark:text-neutral-100 mt-1">
                   {cs.title}
                 </h3>
@@ -66,7 +66,7 @@ export function CaseStudies() {
               </div>
 
               {/* Outcome */}
-              <div className="p-4 rounded-xl border border-blue-500/25 bg-blue-500/5 text-blue-600 dark:text-blue-400 space-y-1.5">
+              <div className="p-4 rounded-xl border border-purple-500/25 bg-purple-500/5 text-purple-600 dark:text-purple-400 space-y-1.5">
                 <h4 className="text-xs uppercase tracking-wider font-bold flex items-center gap-1.5">
                   <FiAward /> The Outcome
                 </h4>

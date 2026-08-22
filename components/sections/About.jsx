@@ -38,16 +38,35 @@ const timelineEvents = [
 
 export function About() {
   return (
-    <section id="about" className="py-20 bg-white dark:bg-black transition-colors duration-300 relative">
+    <section id="about" className="py-14 sm:py-20 bg-white dark:bg-black transition-colors duration-300 relative">
       <div className="max-w-4xl mx-auto px-6">
         {/* Title */}
-        <FadeIn delay={0.1} direction="up" className="text-center mb-16">
+        <FadeIn delay={0.1} direction="up" className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             My Journey & Background
           </h2>
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-3 max-w-xl mx-auto">
             From structures in engineering to structures in code — a timeline of my professional growth and developer journey.
           </p>
+        </FadeIn>
+
+        {/* Profile portrait */}
+        <FadeIn delay={0.15} direction="up" className="flex flex-col items-center mb-16">
+          <div className="relative">
+            {/* Rotating purple aura */}
+            <div className="absolute -inset-3 rounded-full bg-gradient-to-tr from-purple-500 via-fuchsia-500 to-indigo-500 opacity-70 blur-md animate-[orbit-spin_10s_linear_infinite]" />
+            <img
+              src="/images/profile.jpg"
+              alt="Gowtham — React Native Developer"
+              className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full object-cover border-2 border-white dark:border-neutral-900 shadow-xl"
+              loading="lazy"
+            />
+            <span className="absolute bottom-1 right-1 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-bold shadow-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" /> Open to work
+            </span>
+          </div>
+          <h3 className="mt-5 text-lg font-bold text-neutral-900 dark:text-neutral-100">Gowtham Jaganathan</h3>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">React Native Developer & Mobile Architect · Tamil Nadu, India</p>
         </FadeIn>
 
         {/* Interactive Vertical Timeline */}
