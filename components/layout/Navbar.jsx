@@ -1,19 +1,60 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
-import { navLinks } from "@/lib/data/certifications";
-import { FiSun, FiMoon, FiSearch, FiMenu, FiX, FiBookOpen, FiArrowUpRight } from "react-icons/fi";
+import { FiSun, FiMoon, FiSearch, FiMenu, FiX, FiBookOpen, FiArrowUpRight, FiChevronDown } from "react-icons/fi";
 import { MagneticButton } from "../animations/MagneticButton";
 
 const HANDBOOK_URL = "/react-interview-handbook";
+
+// Categorised navigation so the header never overflows: a few top-level entries,
+// each grouping related sections into a dropdown.
+const navGroups = [
+  { name: "Home", href: "#hero" },
+  {
+    name: "About",
+    items: [
+      { name: "Experience", href: "#experience" },
+      { name: "My Journey", href: "#about" },
+      { name: "Skills", href: "#skills" },
+    ],
+  },
+  {
+    name: "Work",
+    items: [
+      { name: "Projects", href: "#projects" },
+      { name: "Live Apps", href: "#live-apps" },
+      { name: "Architecture", href: "#architecture" },
+      { name: "Performance", href: "#performance" },
+      { name: "Case Studies", href: "#case-studies" },
+    ],
+  },
+  {
+    name: "Proof",
+    items: [
+      { name: "Certifications", href: "#certifications" },
+      { name: "Testimonials", href: "#testimonials" },
+      { name: "GitHub", href: "#github" },
+    ],
+  },
+  {
+    name: "Media",
+    items: [
+      { name: "YouTube", href: "#youtube" },
+      { name: "Blog", href: "#blog" },
+    ],
+  },
+  { name: "Contact", href: "#contact" },
+];
 
 export function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState(null);
   const [clickCount, setClickCount] = useState(0);
   const { theme, setTheme } = useTheme();
+  const closeTimer = useRef(null);
 
   useEffect(() => {
     setMounted(true);
@@ -33,8 +74,6 @@ export function Navbar() {
 
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
-  // Tapping the name still scrolls to top; a quick triple-tap jumps to the
-  // handbook (now also reachable via the visible "Handbook" button).
   const handleNameClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     setClickCount((prev) => {
@@ -45,6 +84,14 @@ export function Navbar() {
       }
       return next;
     });
+  };
+
+  const openNow = (name) => {
+    clearTimeout(closeTimer.current);
+    setOpenGroup(name);
+  };
+  const closeSoon = () => {
+    closeTimer.current = setTimeout(() => setOpenGroup(null), 120);
   };
 
   return (
@@ -66,22 +113,54 @@ export function Navbar() {
           <span className="text-purple-500 font-mono text-[10px] bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">RN.DEV</span>
         </button>
 
-        {/* Desktop Links (lg+) */}
-        <div className="hidden lg:flex items-center gap-6 xl:gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-            >
-              {link.name}
-            </a>
-          ))}
+        {/* Desktop grouped nav (lg+) */}
+        <div className="hidden lg:flex items-center gap-1">
+          {navGroups.map((group) =>
+            group.items ? (
+              <div
+                key={group.name}
+                className="relative"
+                onMouseEnter={() => openNow(group.name)}
+                onMouseLeave={closeSoon}
+              >
+                <button
+                  onClick={() => setOpenGroup(openGroup === group.name ? null : group.name)}
+                  className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 transition-colors"
+                >
+                  {group.name}
+                  <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${openGroup === group.name ? "rotate-180" : ""}`} />
+                </button>
+                {openGroup === group.name && (
+                  <div className="absolute left-0 top-full pt-2 w-52">
+                    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md shadow-xl p-1.5">
+                      {group.items.map((item) => (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          onClick={() => setOpenGroup(null)}
+                          className="block px-3 py-2 rounded-lg text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-500/10 transition-colors"
+                        >
+                          {item.name}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <a
+                key={group.name}
+                href={group.href}
+                className="px-3 py-2 rounded-lg text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100/70 dark:hover:bg-neutral-900/70 transition-colors"
+              >
+                {group.name}
+              </a>
+            )
+          )}
         </div>
 
         {/* Action Controls (lg+) */}
         <div className="hidden lg:flex items-center gap-3">
-          {/* Handbook link — the discoverable version of the name easter-egg */}
           <a
             href={HANDBOOK_URL}
             target="_blank"
@@ -93,17 +172,14 @@ export function Navbar() {
             <FiArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
 
-          {/* Cmd + K trigger */}
           <button
             onClick={() => window.dispatchEvent(new Event("toggle-command-palette"))}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-xs text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-700 transition-all cursor-pointer"
           >
             <FiSearch />
-            <span className="hidden xl:inline">Search</span>
             <kbd className="font-mono text-[10px] bg-neutral-200 dark:bg-neutral-800 px-1.5 py-0.5 rounded">⌘K</kbd>
           </button>
 
-          {/* Theme Toggle */}
           <MagneticButton range={30}>
             <button
               onClick={toggleTheme}
@@ -134,28 +210,45 @@ export function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer Menu — categorised */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed top-[56px] left-0 right-0 bottom-0 bg-white dark:bg-black border-t border-neutral-200 dark:border-neutral-800 p-6 z-40 overflow-y-auto">
           <div className="flex flex-col gap-5">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-lg font-semibold text-neutral-800 dark:text-neutral-200 border-b border-neutral-100 dark:border-neutral-900 pb-2"
-              >
-                {link.name}
-              </a>
-            ))}
+            {navGroups.map((group) =>
+              group.items ? (
+                <div key={group.name}>
+                  <p className="text-[10px] uppercase font-bold tracking-wider text-purple-500 mb-2">{group.name}</p>
+                  <div className="flex flex-col gap-2 pl-1">
+                    {group.items.map((item) => (
+                      <a
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="text-base font-semibold text-neutral-800 dark:text-neutral-200"
+                      >
+                        {item.name}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <a
+                  key={group.name}
+                  href={group.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-base font-bold text-neutral-900 dark:text-neutral-100"
+                >
+                  {group.name}
+                </a>
+              )
+            )}
 
-            {/* Handbook */}
             <a
               href={HANDBOOK_URL}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between p-3 rounded-xl text-white bg-gradient-to-r from-purple-600 to-fuchsia-600 font-semibold shadow-md shadow-purple-600/25"
+              className="flex items-center justify-between p-3 rounded-xl text-white bg-gradient-to-r from-purple-600 to-fuchsia-600 font-semibold shadow-md shadow-purple-600/25 mt-1"
             >
               <span className="flex items-center gap-2">
                 <FiBookOpen /> React Interview Handbook
@@ -172,7 +265,7 @@ export function Navbar() {
             >
               <span className="flex items-center gap-2">
                 <FiSearch />
-                Open Search Command Palette
+                Search Command Palette
               </span>
               <kbd className="font-mono text-xs">⌘K</kbd>
             </button>

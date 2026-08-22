@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { FiExternalLink, FiGithub, FiPlay, FiCpu, FiAlertTriangle, FiCheckCircle } from "react-icons/fi";
+import { FaApple, FaAndroid } from "react-icons/fa";
 
 const categories = ["All", "EdTech & Government", "E-commerce & Service", "Recruitment & Training"];
 
@@ -57,10 +58,18 @@ export function FeaturedProjects() {
             <FadeIn key={project.id} delay={idx * 0.05} direction="up">
               <CardSpotlightWrapper className="h-full rounded-2xl border border-neutral-200 dark:border-neutral-900 bg-neutral-50/50 dark:bg-neutral-950/20 backdrop-blur-sm p-6 flex flex-col justify-between hover:scale-[1.02] cursor-pointer group">
                 <div onClick={() => setSelectedProject(project)}>
-                  {/* Category badge */}
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-purple-500">
-                    {project.category}
-                  </span>
+                  {/* Category badge + platform chips */}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-500">
+                      {project.category}
+                    </span>
+                    <span className="flex items-center gap-1.5 shrink-0">
+                      {project.links?.appstore !== undefined && (
+                        <FaApple className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" title="iOS" />
+                      )}
+                      <FaAndroid className="w-3.5 h-3.5 text-[#3ddc84]" title="Android" />
+                    </span>
+                  </div>
 
                   {/* Title */}
                   <h3 className="text-lg font-bold text-neutral-850 dark:text-neutral-100 mt-2 flex items-center gap-2">

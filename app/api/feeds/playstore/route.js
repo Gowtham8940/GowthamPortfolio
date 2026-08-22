@@ -20,6 +20,9 @@ export async function GET() {
     url: DEV_URL,
     description:
       "Purple Info Tech builds fast, reliable mobile apps with clean design and real-world performance in mind.",
+    // The developer's own logo (Play dev page og:image), pre-resolved so it
+    // renders even if the live scrape is blocked.
+    logo: "https://play-lh.googleusercontent.com/wUF4AYTL_Rc-C8KkIloxax1ThkpBF8KuElpy6jKlvL3vuIJ-a8V-SELj5XMixsy8xeZu=s256",
   };
 
   let apps = appCarouselData;
@@ -32,6 +35,10 @@ export async function GET() {
 
     const descMatch = html.match(/property="og:description" content="([^"]+)"/i);
     if (descMatch) developer.description = decodeEntities(descMatch[1].trim());
+
+    // Developer logo = dev-page og:image.
+    const logoMatch = html.match(/property="og:image" content="(https:\/\/play-lh\.googleusercontent\.com\/[^"]+)"/i);
+    if (logoMatch) developer.logo = `${logoMatch[1].split("=")[0]}=s256`;
 
     // Append any package ids present in the initial HTML that we don't already
     // showcase, so a freshly-published app can appear without a code change.

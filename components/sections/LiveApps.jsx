@@ -6,7 +6,7 @@ import { useFeed } from "@/lib/hooks/useFeed";
 import { FadeIn } from "../animations/FadeIn";
 import { AppIcon } from "@/components/ui/AppIcon";
 import { FiSmartphone, FiAward, FiDownload, FiChevronLeft, FiChevronRight, FiExternalLink } from "react-icons/fi";
-import { FaAndroid, FaApple } from "react-icons/fa";
+import { FaAndroid, FaApple, FaGooglePlay } from "react-icons/fa";
 import { motion, AnimatePresence } from "motion/react";
 
 export function LiveApps() {
@@ -17,6 +17,7 @@ export function LiveApps() {
     url: "https://play.google.com/store/apps/dev?id=8170755285088488138",
     description:
       "Purple Info Tech builds fast, reliable mobile apps with clean design and real-world performance in mind.",
+    logo: "https://play-lh.googleusercontent.com/wUF4AYTL_Rc-C8KkIloxax1ThkpBF8KuElpy6jKlvL3vuIJ-a8V-SELj5XMixsy8xeZu=s256",
   };
 
   const total = apps.length;
@@ -28,7 +29,7 @@ export function LiveApps() {
   const activeApp = apps[safeIdx];
 
   return (
-    <section className="py-14 sm:py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
+    <section id="live-apps" className="py-14 sm:py-20 bg-neutral-50 dark:bg-neutral-950/20 transition-colors duration-300">
       <div className="max-w-4xl mx-auto px-6">
         {/* Title */}
         <FadeIn delay={0.1} direction="up" className="text-center mb-8">
@@ -48,14 +49,26 @@ export function LiveApps() {
             rel="noopener noreferrer"
             className="group flex items-center gap-4 max-w-xl mx-auto p-4 rounded-2xl border border-neutral-200 dark:border-neutral-900 bg-white/70 dark:bg-black/40 backdrop-blur-sm hover:border-purple-400 dark:hover:border-purple-600 transition-colors"
           >
-            <span className="grid place-items-center w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white shadow-lg">
-              <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 5.277L13.791 16 16.5 13.5l-13.5-7.75v-.473zm13.5 8.223l3.25-1.854a1.5 1.5 0 0 0 0-2.6L16.5 7.2zM3 3v.328l13.5 7.72 2.7-2.7L3 3zm0 18v-.328l13.5-7.72-2.7 2.7z" />
-              </svg>
+            <span className="grid place-items-center w-12 h-12 shrink-0 rounded-xl overflow-hidden bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-lg">
+              {developer.logo ? (
+                <img
+                  src={developer.logo}
+                  alt={`${developer.name} logo`}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
+                />
+              ) : (
+                <svg viewBox="0 0 24 24" className="w-6 h-6 fill-current text-purple-500" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 5.277L13.791 16 16.5 13.5l-13.5-7.75v-.473zm13.5 8.223l3.25-1.854a1.5 1.5 0 0 0 0-2.6L16.5 7.2zM3 3v.328l13.5 7.72 2.7-2.7L3 3zm0 18v-.328l13.5-7.72-2.7 2.7z" />
+                </svg>
+              )}
             </span>
             <div className="text-left min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <p className="text-[10px] uppercase font-bold text-neutral-400 tracking-wider">Google Play Developer</p>
+                <span className="flex items-center gap-1 text-[9px] font-bold text-[#20a366] dark:text-[#3ddc84]">
+                  <FaGooglePlay className="w-2.5 h-2.5" /> Verified
+                </span>
               </div>
               <h3 className="text-base font-bold text-neutral-900 dark:text-neutral-100 truncate">{developer.name}</h3>
               <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-1">{developer.description}</p>

@@ -30,6 +30,10 @@ export async function GET() {
         const contentHtml = tag(item, "content:encoded") || tag(item, "description");
         const plain = stripHtml(contentHtml);
 
+        // Cover image = first real Medium CDN image (skip the tracking pixel).
+        const imgMatch = contentHtml.match(/<img[^>]+src="(https:\/\/cdn-images-1\.medium\.com\/[^"]+)"/i);
+        const image = imgMatch ? imgMatch[1].replace(/\/max\/\d+\//, "/max/1024/") : "";
+
         // First category tag becomes the display category.
         const cat = (item.match(/<category>([\s\S]*?)<\/category>/i) || [])[1] || "";
         const category = prettyCategory(
@@ -43,6 +47,7 @@ export async function GET() {
           readTime: estimateReadTime(plain),
           date: formatDate(tag(item, "pubDate")),
           link,
+          image,
           category: category || "React Native",
         };
       })

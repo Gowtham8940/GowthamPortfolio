@@ -2,6 +2,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeTransition } from "@/components/animations/ThemeTransition";
 
 export const metadata = {
   title: "Gowtham | React Native Developer & Mobile Architect",
@@ -30,6 +31,9 @@ export default function RootLayout({ children }) {
     >
       <body className="antialiased min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
         <ThemeProvider>
+          {/* Solar-system day/night warp — in the layout so it plays on every
+              route (portfolio + handbook), not just the home page. */}
+          <ThemeTransition />
           <SmoothScroll>
             <TooltipProvider>
               {children}

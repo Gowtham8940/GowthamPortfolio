@@ -6,7 +6,6 @@ import Footer from "@/components/layout/Footer";
 import CommandPalette from "@/components/layout/CommandPalette";
 import { CursorGlow } from "@/components/animations/CursorGlow";
 import { SkyAmbient } from "@/components/animations/SkyAmbient";
-import { ThemeTransition } from "@/components/animations/ThemeTransition";
 import useKeyboardShortcuts from "@/lib/hooks/useKeyboardShortcuts";
 
 // Import Sections
@@ -37,9 +36,6 @@ export default function Home() {
     <div className="relative flex flex-col min-h-screen overflow-x-hidden select-none text-neutral-850 dark:text-neutral-200 transition-colors duration-300">
       {/* Persistent celestial starfield (dark mode) */}
       <SkyAmbient />
-
-      {/* Solar-system day/night warp on theme toggle */}
-      <ThemeTransition />
 
       {/* Global visual mouse glow */}
       <CursorGlow />
