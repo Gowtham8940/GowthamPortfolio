@@ -532,3 +532,7 @@ html[lang="ta"] .shelf .t-h2, html[lang="ta"] .shelf .t-h3, html[lang="ta"] .she
 .pet-z text:last-child { animation-delay: 0.6s; }
 @keyframes pet-z { 0%, 100% { opacity: 0.2; transform: translateY(4px); } 50% { opacity: 1; transform: translateY(-2px); } }
 @media (prefers-reduced-motion: reduce) { .pet-panel, .pet-tip, .pet-z text { animation: none; } }
+
+/* Phone frame: proportions follow width (percent padding/radius), like a real device */
+.phone-frame { padding: 3.2%; border-radius: 15% / 6.9%; }
+.phone-screen { border-radius: 12% / 5.6%; }

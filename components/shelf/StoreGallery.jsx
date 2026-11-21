@@ -77,14 +77,14 @@ export function StoreGallery() {
             return (
               <li key={app.link} className="w-[240px] shrink-0 snap-start sm:w-[260px]">
                 {shot ? (
-                  <StoreTile src={shot} alt={`${app.name} on Google Play`} />
+                  <StoreTile src={shot} alt={`${app.name} on Google Play`} eager />
                 ) : (
                   <div className="grid aspect-[9/16] place-items-center rounded-[22px] bg-white/10">
                     <img src={app.iconUrl || app.icon} alt="" className="h-20 w-20 rounded-[20px]" />
                   </div>
                 )}
                 <div className="mt-5 flex items-center gap-3">
-                  <img src={app.iconUrl || app.icon} alt="" width={44} height={44} loading="lazy" className="h-11 w-11 shrink-0 rounded-[12px]" />
+                  <img src={app.iconUrl || app.icon} alt="" width={44} height={44} className="h-11 w-11 shrink-0 rounded-[12px]" />
                   <div className="min-w-0">
                     <h3 className="truncate font-semibold">{app.name}</h3>
                     <p className="t-sm opacity-60">

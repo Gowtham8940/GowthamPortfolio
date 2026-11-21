@@ -466,3 +466,46 @@ test("status API reports each site", async ({ request }) => {
   const body = await res.json();
   expect(body.sites.map((s) => s.id)).toEqual(["aira", "inviteforyou", "sri-hari", "jewel-billing"]);
 });
+
+// Regressions found by scrolling the live site by hand ----------------------
+
+test("stacked work cards never go dark while the next card slides in", async ({ page }, testInfo) => {
+  test.skip(!isDesktop(testInfo), "cards only stack on desktop");
+  await open(page, { theme: "dark" });
+  const cards = page.locator(".work-card");
+  // Park each upcoming card just entering the viewport: the moment the old bug hit.
+  for (let i = 1; i < (await cards.count()); i++) {
+    await page.evaluate((i) => {
+      const c = document.querySelectorAll(".work-card")[i];
+      window.scrollTo(0, c.getBoundingClientRect().top + window.scrollY - window.innerHeight + 60);
+    }, i);
+    await page.waitForTimeout(500);
+    const state = await page.evaluate(() =>
+      [...document.querySelectorAll(".work-card")].map((c) => ({
+        filter: getComputedStyle(c).filter,
+        shade: +getComputedStyle(c.querySelector(".card-shade")).opacity,
+      }))
+    );
+    for (const s of state) {
+      expect(s.filter).toBe("none");
+      expect(s.shade).toBeLessThanOrEqual(0.31);
+    }
+  }
+});
+
+test("store gallery screenshots are loaded before the row slides in", async ({ page }) => {
+  await open(page);
+  await scrollToId(page, "apps", 0);
+  const loaded = await page.evaluate(() => [...document.querySelectorAll("#apps li img[width]")].every((i) => i.complete && i.naturalWidth > 0));
+  expect(loaded).toBe(true);
+});
+
+test("Chalky's greeting steps aside when the visitor scrolls on", async ({ page }) => {
+  await open(page);
+  await page.evaluate(() => sessionStorage.removeItem("gj-pet-greeted"));
+  await page.reload({ waitUntil: "networkidle" });
+  const bubble = page.getByRole("region", { name: "Chalky" });
+  await expect(bubble).toContainText("Click me and I'll walk you around", { timeout: 9000 });
+  await page.evaluate(() => window.scrollBy(0, 900));
+  await expect(bubble).toBeHidden({ timeout: 4000 });
+});

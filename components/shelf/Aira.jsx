@@ -119,7 +119,7 @@ export function Aira() {
               <FiArrowUpRight aria-hidden className="h-4 w-4 shrink-0" />
             </a>
           </div>
-          <div className="relative pb-8 pr-[18%]" data-fade>
+          <div className="relative pb-[26%] pr-[18%] sm:pb-[20%]" data-fade>
             <BrowserFrame src="/images/work/aira.jpg" alt="ekhool.com/aira" url="ekhool.com/aira" />
             <div className="absolute bottom-0 right-0 w-[32%] max-w-[210px]">
               <PhoneFrame src="/images/work/aira-mobile-full.jpg" alt="Aira on a phone" />

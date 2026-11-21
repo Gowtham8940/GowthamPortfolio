@@ -26,9 +26,11 @@ function Visual({ item }) {
     );
   }
   return (
-    <div className="relative w-full pb-6 pr-[16%] sm:pr-[20%]">
+    // Bottom padding (a % of width) reserves room for the phone, which is
+    // taller than the browser, so the card never clips it.
+    <div className="relative w-full pb-[30%] pr-[20%] sm:pb-[22%]">
       <BrowserFrame src={item.browser.src} alt={item.browser.alt} url={item.browser.url} scroll={item.browser.scroll} />
-      <div className="absolute -bottom-2 right-0 w-[34%] max-w-[230px]">
+      <div className="absolute bottom-0 right-0 w-[34%] max-w-[230px]">
         <PhoneFrame src={item.phone.src} alt={item.phone.alt} />
       </div>
     </div>
@@ -39,9 +41,10 @@ function Card({ item, index }) {
   const { tx } = useLocale();
   return (
     <article
-      className="work-card grid lg:sticky min-h-[min(760px,calc(100svh-120px))] overflow-hidden rounded-[32px] border border-rule bg-surface lg:grid-cols-[0.85fr_1.15fr]"
+      className="work-card relative grid lg:sticky min-h-[min(760px,calc(100svh-120px))] overflow-hidden rounded-[32px] border border-rule bg-surface lg:grid-cols-[0.85fr_1.15fr]"
       style={{ top: `calc(96px + ${index * 14}px)` }}
     >
+      <div aria-hidden className="card-shade pointer-events-none absolute inset-0 z-10 rounded-[32px] bg-black opacity-0" />
       <div className="flex flex-col justify-between gap-8 p-6 sm:p-10">
         <div>
           <p className="t-sm flex flex-wrap gap-x-3 text-ink-2">
@@ -103,12 +106,11 @@ export function SelectedWork() {
         cards.forEach((card, i) => {
           const next = cards[i + 1];
           if (!next) return;
-          gsap.to(card, {
-            scale: 0.94,
-            filter: "brightness(0.88)",
-            ease: "none",
-            scrollTrigger: { trigger: next, start: "top bottom", end: "top 25%", scrub: true },
-          });
+          // Shade with an overlay, not a CSS filter: GSAP tweens filter from
+          // "none" as brightness(0), which turned cards black mid-scroll.
+          const st = { trigger: next, start: "top bottom", end: "top 25%", scrub: true };
+          gsap.fromTo(card, { scale: 1 }, { scale: 0.94, ease: "none", scrollTrigger: st });
+          gsap.fromTo(card.querySelector(".card-shade"), { opacity: 0 }, { opacity: 0.3, ease: "none", scrollTrigger: { ...st } });
         });
       });
       return () => mm.revert();

@@ -414,6 +414,19 @@ export function Chalky() {
     return () => document.removeEventListener("keydown", onKey);
   }, [touring, endTour, next, prev]);
 
+  // The greeting steps aside on its own: after a while, or once the visitor scrolls on.
+  useEffect(() => {
+    if (!greet) return;
+    const startY = window.scrollY;
+    const id = setTimeout(() => setGreet(false), 10000);
+    const onScroll = () => Math.abs(window.scrollY - startY) > 500 && setGreet(false);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      clearTimeout(id);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [greet]);
+
   // First-visit greeting.
   useEffect(() => {
     if (hidden || safeGet("sessionStorage", GREET_KEY)) return;

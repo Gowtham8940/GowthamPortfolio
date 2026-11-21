@@ -67,8 +67,11 @@ export function PhoneFrame({ src, alt, className = "" }) {
   const screen = useRef(null);
   useAutoPan(screen);
   return (
-    <div className={`relative rounded-[44px] bg-[#111312] p-[9px] shadow-[var(--tile-shadow)] ring-1 ring-black/40 ${className}`}>
-      <div ref={screen} data-frame="phone" className="relative aspect-[390/844] overflow-hidden rounded-[36px] bg-white">
+    // Bezel, corners and screen radius are proportional to the phone's width
+    // (like a real device), so it stays phone-shaped at any size instead of
+    // turning into a pill when it gets small.
+    <div className={`phone-frame relative bg-[#111312] shadow-[var(--tile-shadow)] ring-1 ring-white/20 ${className}`}>
+      <div ref={screen} data-frame="phone" className="phone-screen relative aspect-[390/844] overflow-hidden bg-white">
         <img src={src} alt={alt} loading="lazy" className="block h-auto w-full will-change-transform" draggable={false} />
       </div>
     </div>
@@ -80,13 +83,13 @@ export function BrowserFrame({ src, alt, url, scroll = false, className = "" }) 
   useAutoPan(view, { speed: 110, enabled: scroll });
   return (
     <figure className={`m-0 overflow-hidden rounded-[16px] border border-white/10 bg-[#f6f6f7] shadow-[var(--tile-shadow)] ${className}`}>
-      <figcaption className="flex h-9 items-center gap-3 bg-[#ececee] px-3">
-        <span aria-hidden className="flex gap-1.5">
-          <i className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
-          <i className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
-          <i className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+      <figcaption className="flex h-7 items-center gap-2 bg-[#ececee] px-2.5 sm:h-9 sm:gap-3 sm:px-3">
+        <span aria-hidden className="flex shrink-0 gap-1 sm:gap-1.5">
+          <i className="h-2 w-2 rounded-full bg-[#ff5f57] sm:h-2.5 sm:w-2.5" />
+          <i className="h-2 w-2 rounded-full bg-[#febc2e] sm:h-2.5 sm:w-2.5" />
+          <i className="h-2 w-2 rounded-full bg-[#28c840] sm:h-2.5 sm:w-2.5" />
         </span>
-        <span className="mx-auto rounded-md bg-white px-3 py-0.5 text-[12px] text-[#5b6170]">{url}</span>
+        <span className="mx-auto min-w-0 truncate rounded-md bg-white px-2 py-0.5 text-[10px] text-[#5b6170] sm:px-3 sm:text-[12px]">{url}</span>
       </figcaption>
       <div ref={view} data-frame="browser" className="aspect-[16/10] overflow-hidden">
         <img src={src} alt={alt} loading="lazy" className="block h-auto w-full will-change-transform" draggable={false} />
@@ -100,14 +103,15 @@ export function BrowserFrame({ src, alt, url, scroll = false, className = "" }) 
 // late-loading tiles don't shift the page (and scroll positions) around.
 const TALL = /(aaeb|tvetcollege|magicbillion|thenauticalguyd|optilearn|uniliv)/;
 
-export function StoreTile({ src, alt, className = "" }) {
+export function StoreTile({ src, alt, eager = false, className = "" }) {
   return (
     <img
       src={src}
       alt={alt}
       width={720}
       height={TALL.test(src) ? 1557 : 1280}
-      loading="lazy"
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
       className={`block h-auto w-full rounded-[22px] shadow-[var(--tile-shadow)] outline outline-1 -outline-offset-1 outline-black/10 ${className}`}
     />
   );
