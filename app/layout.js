@@ -1,25 +1,56 @@
+import "lenis/dist/lenis.css";
 import "./globals.css";
+import { Geist, Noto_Sans_Tamil } from "next/font/google";
+import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeTransition } from "@/components/animations/ThemeTransition";
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+  display: "swap",
+});
+
+const tamil = Noto_Sans_Tamil({
+  subsets: ["tamil"],
+  variable: "--font-tamil",
+  display: "swap",
+});
+
+const title = "Gowtham J — Full-stack & mobile engineer";
+const description =
+  "Gowtham J builds React Native apps, Next.js sites, mobile games and AI agents. 4+ years shipping government LMS apps used by 800K+ students in India and Ethiopia, and Aira, e-Khool's multi-agent course builder.";
 
 export const metadata = {
-  title: "Gowtham | React Native Developer & Mobile Architect",
-  description: "Portfolio of Gowtham, a React Native Developer with 3.7+ years of experience building high-performance, 60 FPS, offline-first mobile applications for iOS & Android, including enterprise and government LMS systems.",
-  keywords: ["React Native", "Expo", "Swift", "Kotlin", "Mobile App Developer", "iOS Developer", "Android Developer", "React Native Developer", "Resbee Info Tech"],
-  authors: [{ name: "Gowtham" }],
+  metadataBase: new URL("https://gowtham-portfolio-nu.vercel.app"),
+  title,
+  description,
+  keywords: [
+    "Gowtham J",
+    "Full-stack developer",
+    "React Native developer",
+    "Next.js developer",
+    "AI agents",
+    "LangGraph",
+    "MCP",
+    "Mobile game developer",
+    "e-Khool",
+    "Tamil Nadu",
+  ],
+  authors: [{ name: "Gowtham J" }],
   openGraph: {
-    title: "Gowtham | React Native Developer & Mobile Architect",
-    description: "Expert in building high-performance, 60 FPS, offline-first React Native apps. Team Lead at Resbee Info Tech.",
+    title,
+    description,
     type: "website",
     locale: "en_US",
+    images: ["/og.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gowtham | React Native Developer & Mobile Architect",
-    description: "Expert in building high-performance, 60 FPS, offline-first React Native apps.",
-  }
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -27,17 +58,14 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning
-      className="font-sans"
+      className={`font-sans ${geist.variable} ${tamil.variable}`}
     >
       <body className="antialiased min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
         <ThemeProvider>
-          {/* Solar-system day/night warp — in the layout so it plays on every
-              route (portfolio + handbook), not just the home page. */}
-          <ThemeTransition />
           <SmoothScroll>
-            <TooltipProvider>
-              {children}
-            </TooltipProvider>
+            <LocaleProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </LocaleProvider>
           </SmoothScroll>
         </ThemeProvider>
       </body>
