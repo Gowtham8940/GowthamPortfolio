@@ -9,6 +9,7 @@ import { SelectedWork } from "./SelectedWork";
 import { StoreGallery } from "./StoreGallery";
 import { ProjectIndex } from "./ProjectIndex";
 import { Experience } from "./Rows";
+import { TechStack } from "./TechStack";
 import { Writing } from "./Writing";
 import { Footer } from "./Footer";
 import { Loader } from "@/components/motion/Loader";
@@ -40,6 +41,7 @@ export function Site() {
           <SelectedWork />
           <StoreGallery />
           <ProjectIndex />
+          <TechStack />
           <Experience />
           <Writing />
         </main>
