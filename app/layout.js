@@ -23,7 +23,7 @@ const description =
   "Gowtham J builds React Native apps, Next.js sites, mobile games and AI agents. 4+ years shipping government LMS apps used by 800K+ students in India and Ethiopia, and Aira, e-Khool's multi-agent course builder.";
 
 export const metadata = {
-  metadataBase: new URL("https://gowtham-portfolio-nu.vercel.app"),
+  metadataBase: new URL("https://gowthamdev.vercel.app"),
   title,
   description,
   keywords: [

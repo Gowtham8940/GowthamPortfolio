@@ -7,91 +7,135 @@ section by section. Character limits are noted where the platform enforces one.
 
 ## LinkedIn
 
+Audit of the live profile (22 Nov 2026) and what to change, in order of impact.
+
+Applied on 22 Nov: About (#2), Resbee title and description (#5), Purple Info Tech (#6), Featured links, contact-info websites. Still open: headline (#1), YouTube role (#7, LinkedIn wants a YouTube work email), Radaz dates (#8), projects order (#9), following (#10), the repost (#11), banner upload.
+
+| # | Now | Change to |
+|---|---|---|
+| 1 | Headline ends "Open to Entry-Level AI Roles" | Senior headline below. "Entry-level" tells recruiters to file you as junior. |
+| 2 | No About section | Paste the About below. It is the first thing a recruiter reads. |
+| 3 | No Featured section | Add the four links below. |
+| 4 | Location: Bengaluru; the job is in Nagercoil | Keep Bengaluru if that is where you want offers; the Resbee role stays Nagercoil, On-site. |
+| 5 | Resbee title: "Software Engineer / Mobile Team Lead" | "Senior React Native Engineer · Mobile Team Lead" (matches the work and the portfolio) |
+| 6 | Purple Info Tech missing from Experience | Add it (below). Pen Fight, InviteForYou and Jewel Billing live there. |
+| 7 | YouTube role ended "Nov 2026" | Tick "I am currently working in this role". |
+| 8 | Radaz dates: Mar 2023 – Sep 2024 | The portfolio says Mar 2023 – Oct 2024. Pick one and use it everywhere. |
+| 9 | Projects lead with Suya Mobiles (repo is private now) | Put Aira, Pen Fight, Government LMS, InviteForYou first. |
+| 10 | Following: Sundar Pichai, Vineeta Singh | Follow people in your field (list below), so your feed and "Interests" signal mobile + AI. |
+| 11 | Recent repost: "Nvidia prepares to fire Jensen Huang" | Delete it. An unverified rumour next to your technical posts costs credibility. |
+
+### Banner (1584 × 396)
+
+`docs/linkedin-banner.png`, same chalk-green design as the portfolio and GitHub profile.
+
 ### Headline (220 max)
 
-> Full-Stack Developer at e-Khool | React Native, Next.js & AI agents (LangGraph, Claude, MCP) | Led LMS apps for 800K+ students | Building games & sites at Purple Info Tech
+> Senior React Native Engineer & Mobile Team Lead | Offline-first apps for 800K+ students | AI agents with LangGraph, Claude & MCP | React Native New Architecture, Swift, Kotlin
 
 Shorter alternative:
 
-> Full-stack & mobile engineer | React Native, Next.js, AI agents | 800K+ users across India & Ethiopia
+> Senior React Native Engineer · Mobile Team Lead | 800K+ users | AI agents (LangGraph, MCP)
 
 ### About (2,600 max)
 
-> I build mobile apps, websites, games and AI agents that hold up on cheap phones and slow networks.
+> I build mobile apps that hold up on cheap phones and one-bar networks, and the AI agents behind them.
 >
-> For the last four years most of that has been government education. At Resbee Info Technologies (e-Khool) I lead a team of four building the learning apps behind MAAZTER in Tamil Nadu, e-Khool LMS in Assam, and AAEB / TVET eSchool in Ethiopia, used by more than 800,000 students. That work is mostly the awkward parts of mobile: offline-first sync for villages with one bar of signal, Swift and Kotlin players for encrypted video, live exams for 5,000 students at once, and a move to the React Native New Architecture that made the apps start 45% faster and crash 70% less.
+> For four years most of that has been government education. At e-Khool I lead a team of four building the learning apps behind MAAZTER (Tamil Nadu), e-Khool LMS (Assam) and AAEB / TVET eSchool (Ethiopia), used by more than 800,000 students at 99.5% uptime.
 >
-> Lately I spend a lot of my time on AI. I'm one of the engineers building Aira (ekhool.com/aira), e-Khool's enterprise AI agent platform: a LangGraph multi-agent system on FastAPI. Requests are classified and routed to a fast formatter, a chat agent, a plan–execute–critique research loop, or a course agent that fans out to nine sub-agents (curriculum, lessons, PDFs, images, audio, video and more). Each output is scored before it ships, state is checkpointed to MongoDB so long jobs survive restarts, and it runs on Claude, OpenAI, Gemini or a local model behind one interface. Claude can also run the LMS directly through MCP tools.
+> What I'm known for:
+> → Offline-first sync (WatermelonDB, TanStack Query): 60% fewer sync failures in low-connectivity villages
+> → Native Swift and Kotlin players for encrypted video, published to npm (5K+ downloads)
+> → New Architecture migration: startup 45% faster, 70% fewer crashes, 45 → 60 FPS
+> → Live exams for 5,000 concurrent students; AES storage that passed a government security audit
 >
-> Outside work I run Purple Info Tech, my own studio:
-> • Pen Fight: Flick Desk Duel, the last-bench desk game, on Google Play. Physics in a UI-thread worklet, drawn with Skia, 60 FPS on low-end phones.
-> • InviteForYou (inviteforyou.in), animated Tamil and English wedding invitations with 3D openings, RSVPs and Razorpay.
-> • Jewel Billing and websites for local businesses.
+> AI: I'm one of the engineers building Aira (ekhool.com/aira), e-Khool's agent platform. A LangGraph multi-agent system on FastAPI routes each request to a fast path, a chat agent, a plan–act–critique research loop or a course agent with nine sub-agents, each output scored 0–100 before it ships. Claude can run the LMS directly through MCP tools I built.
 >
-> Stack: React Native, Expo, Swift, Kotlin, React, Next.js, Node.js, FastAPI, Firebase, MongoDB, AWS, LangGraph, LangChain, Claude, MCP.
+> On the side I run Purple Info Tech: Pen Fight, a 60 FPS React Native + Skia game on Google Play (1K+ installs), InviteForYou (inviteforyou.in), and Jewel Billing. I write about React Native on Medium and teach on YouTube (Learn with Gowtham).
 >
-> I'm open to senior React Native, full-stack and mobile lead roles, remote or on-site (happy to relocate), and to freelance builds.
+> Stack: React Native, TypeScript, Swift, Kotlin, Reanimated, Skia, Next.js, Node.js, FastAPI, Firebase, MongoDB, AWS, LangGraph, LangChain, Claude, MCP.
 >
-> Portfolio: https://gowtham-portfolio-nu.vercel.app
+> Open to senior React Native, mobile lead and full-stack roles: remote, hybrid or relocation.
+>
+> Portfolio: gowthamdev.vercel.app
+> GitHub: github.com/Gowtham8940
 > Email: gowthamjaganthan@gmail.com
 
 ### Experience
 
-**Full-Stack Developer, Team Lead**
-Resbee Info Technologies Pvt Ltd (e-Khool) · Oct 2024 – Present · Nagercoil, Tamil Nadu
+**Senior React Native Engineer · Mobile Team Lead**
+Resbee Info Technologies Pvt Ltd (e-Khool) · Full-time · Oct 2024 – Present · Nagercoil, Tamil Nadu · On-site
 
-> Lead a team of 4 building government and enterprise learning platforms for 800K+ users in India and Ethiopia, at 99.5% uptime.
->
-> AI and agents
-> • Built Aira, e-Khool's LangGraph multi-agent system on FastAPI: intent routing, a plan–execute–critique research loop with self-hosted SearXNG search, and a course agent with nine sub-agents.
-> • Reusable per-format skills with a 0–100 quality gate on every generated material; MongoDB checkpointing so long course builds resume after a restart.
-> • One model interface over Claude, OpenAI, Gemini, NVIDIA NIM and Ollama; cut token spend by routing simple requests to a fast path and trimming state between nodes.
-> • MCP tools that let Claude create courses, assessments and materials directly in an e-Khool account.
-> • Local text-to-speech service (Kokoro, Piper) for lesson narration, no paid APIs.
-> • AI features with LangChain and the OpenAI API cut average student query resolution time by 40%.
+> Lead a team of 4 on e-Khool's offline-first, AI-powered LMS and enterprise apps for government and education clients in India and Ethiopia: 800K+ users, 99.5% uptime.
 >
 > Mobile
-> • Offline-first sync (TanStack Query, WatermelonDB, NetInfo): 60% fewer sync failures in low-connectivity regions.
-> • Native Swift/Kotlin players for encrypted MP4/MP3/M3U8, published as NPM packages with 5K+ downloads.
-> • New Architecture migration (Fabric, TurboModules, Hermes tuning): startup 45% faster, crashes down 70%, 45 → 60 FPS.
-> • Live exam system for 5,000 concurrent students; AES-encrypted storage that passed a government security audit.
+> • Offline-first sync (TanStack Query, WatermelonDB, Redux Toolkit, NetInfo): 60% fewer sync failures in low-connectivity regions
+> • Native Swift/Kotlin players for encrypted MP4/MP3/M3U8, published as npm packages (5K+ downloads)
+> • New Architecture migration (Fabric, TurboModules, Hermes): startup 45% faster, crashes down 70%, 45 → 60 FPS
+> • Live exam system for 5,000 concurrent students; AES-encrypted storage that passed a government security audit
 >
-> Skills: LangGraph · React Native · FastAPI · Model Context Protocol (MCP) · Team Leadership
-
-**React Native Developer**
-Radaz Technologies Pvt Ltd · Mar 2023 – Oct 2024 · Coimbatore, Tamil Nadu
-
-> • Delivered 3 production Android/iOS apps in IoT and e-commerce.
-> • Real-time ESP32/MQTT device monitoring that halved alert response time.
-> • Live tracking with the Google Maps SDK for 10K+ daily active users.
-> • Moved releases to CodePush OTA updates: hotfixes went from 2 days to under 2 hours.
+> AI (Aira)
+> • LangGraph multi-agent orchestration on FastAPI: intent routing, plan–act–critique research loop, course agent with nine sub-agents and a 0–100 quality gate
+> • One interface over Claude, OpenAI, Gemini, NVIDIA NIM and Ollama; MongoDB checkpointing so long jobs survive restarts
+> • MCP tools that let Claude create courses, assessments and materials in a school's account
+> • AI features (LangChain, OpenAI API) cut average student query resolution time by 40%
+>
+> Skills to attach: React Native · LangGraph · Model Context Protocol · FastAPI · Team Leadership
 
 **Founder & Developer**
-Purple Info Tech (self-employed) · 2024 – Present
+Purple Info Tech · Self-employed · 2024 – Present · Remote
 
-> My own studio and Google Play developer account. Games, apps and websites for small businesses:
-> Pen Fight: Flick Desk Duel (Google Play), InviteForYou, Jewel Billing, Sri Hari Agencies.
+> My own studio and Google Play developer account.
+> • Pen Fight: Flick Desk Duel, a 60 FPS React Native + Skia game; physics in a Reanimated UI-thread worklet; 1K+ installs
+> • InviteForYou (inviteforyou.in): animated Tamil and English invitations, 69 designs, 3D openings, RSVPs, Razorpay
+> • Jewel Billing: GST billing for jewellery shops, Vitest + Playwright on every pull request
+> • Sites for local businesses from a reusable Astro template
+>
+> Skills to attach: React Native · Skia · Next.js · Three.js · Astro
 
-### Featured (add as links)
+**Content Creator**: YouTube, keep as is, set to Present.
 
-1. Portfolio: https://gowtham-portfolio-nu.vercel.app
-2. Pen Fight on Google Play: https://play.google.com/store/apps/details?id=com.penfight
-3. Medium write-up: "I rebuilt Pen Fight as a 60 FPS mobile game with React Native Skia"
-4. InviteForYou: https://inviteforyou.in
+**Radaz Technologies**: keep the two roles; only fix the end date (see audit #8).
 
-### Projects section
+### Featured (add in this order)
 
-| Project | Dates | Description (one line) |
-| --- | --- | --- |
-| Aira: multi-agent course creator (e-Khool) | Ongoing | LangGraph agents that plan, research and build full courses with a quality gate on every output. |
-| Pen Fight: Flick Desk Duel | 2026 | The last-bench desk game as a 60 FPS React Native + Skia game, on Google Play. |
-| InviteForYou | 2026 | Animated Tamil & English digital invitations with 3D openings, RSVPs and payments. Next.js, Three.js, Firebase. |
-| AI Audio Generator | 2026 | Lesson text to narrated audio with local open-source TTS. FastAPI, React, Docker. |
-| Government LMS apps | 2024 – now | MAAZTER, e-Khool LMS, AAEB / TVET eSchool: offline-first learning for 800K+ students. |
+1. Link: portfolio, https://gowthamdev.vercel.app
+2. Post: your "New portfolio. Live today." post (it already has the best hook)
+3. Link: Pen Fight on Google Play, https://play.google.com/store/apps/details?id=com.penfight
+4. Link: Medium, "I rebuilt Pen Fight as a 60 FPS mobile game with React Native + Skia"
+
+### Projects (top 5, in this order)
+
+| Project | Dates | One line |
+|---|---|---|
+| Aira: AI agent platform (e-Khool) | 2025 – Present | LangGraph agents that plan, research and build whole courses, with a 0–100 quality gate on every output. ekhool.com/aira |
+| Government learning apps | Feb 2026 – Present | MAAZTER, e-Khool LMS (Assam), AAEB / TVET eSchool: offline-first learning for 800K+ students. |
+| Pen Fight: Flick Desk Duel | 2026 | The last-bench desk game as a 60 FPS React Native + Skia game on Google Play. |
+| InviteForYou | 2026 | Animated Tamil & English invitations with 3D openings, RSVPs and payments. Next.js, Three.js, Firebase. |
+| AI Audio Generator | 2026 | Lesson text to narrated audio with local open-source TTS. FastAPI, React, Docker. github.com/Gowtham8940/Audio-generation |
+
+Keep Suya Mobiles lower down and drop the "similar to Cashify" line.
 
 ### Top skills (pin these five)
 
-React Native · Next.js · LangGraph / AI Agents · Node.js · FastAPI
+React Native · TypeScript · LangGraph / AI Agents · Swift & Kotlin (Native Modules) · Team Leadership
+
+### Contact info
+
+- Website: Portfolio, https://gowthamdev.vercel.app
+- Website: Other, https://github.com/Gowtham8940
+- Custom public URL: linkedin.com/in/gowthamjagan (already set)
+
+### People to follow (your field, not general CEOs)
+
+Search each name and check the profile before you follow. These are the people senior React Native and AI engineers usually follow:
+
+- React Native and Expo: William Candillon (Skia; your Medium posts already credit him), Charlie Cheever and James Ide (Expo co-founders), Evan Bacon (Expo), Fernando Rojo (Solito), Catalin Miron
+- React and web: Kent C. Dodds, Guillermo Rauch (Vercel), Theo Browne
+- AI engineering: Andrew Ng, Andrej Karpathy, Harrison Chase (LangChain / LangGraph)
+- Companies: Expo, Software Mansion (Reanimated, Skia), Meta Open Source, Anthropic, LangChain
+
+Follow, don't connect: following shows on your profile under "Interests" and fills your feed with your field.
 
 ---
 
@@ -104,7 +148,11 @@ React Native · Next.js · LangGraph / AI Agents · Node.js · FastAPI
 Profile fields to update: **Location** says Bengaluru; the résumé says Tamil Nadu, so pick one.
 Add the portfolio as the website.
 
-### Profile README additions
+### Profile README
+
+Done (22 Nov 2026): rebuilt in the portfolio's chalk-green theme. Source: github.com/Gowtham8940/Gowtham8940.
+
+<!-- old suggestions below kept for reference -->
 
 Your profile README says "3.6+ years" and describes you as React Native only. Suggested changes:
 
