@@ -180,7 +180,9 @@ const HIDE_KEY = "gj-pet-hidden";
 const GREET_KEY = "gj-pet-greeted";
 const HOME_KEY = "gj-pet-home";
 const NAV_H = 84;
-const AUTO_MS = 8000;
+const AUTO_MS = 9000;
+// What counts as "content" Chalky must not sit on while resting.
+const CONTENT = "a,button,input,textarea,select,label,summary,[role=button],img,video,canvas,iframe,svg,p,h1,h2,h3,h4,h5,h6,li,dt,dd,span,code,pre,figure,time,strong,em";
 
 const safeGet = (store, k) => {
   try {
@@ -303,13 +305,20 @@ export function Chalky() {
   const home = useRef(null);
   const traveling = useRef(false);
   const stepRef = useRef(0);
-  const state = useRef({ touring: false, arrived: false, mood: "idle" });
+  const state = useRef({ touring: false, arrived: false, mood: "idle", greet: false, hover: false });
   const drag = useRef({ down: false, active: false, sx: 0, sy: 0, ox: 0, oy: 0, lx: 0, ly: 0, lt: 0, vx: 0, vy: 0 });
   const suppressClick = useRef(false);
   const pet = useRef({ acc: 0, stop: null, timer: 0 });
   const clicks = useRef([]);
   const lean = useRef({ scroll: 0, cursor: 0, drag: 0 });
   const moodTimer = useRef(0);
+  const anchorRect = useRef(null);
+  const peek = useRef({ v: 0, target: 0 });
+  const lastScroll = useRef(0);
+  const covering = useRef(false);
+  const bubbleSide = useRef("right");
+  const awayRef = useRef(false);
+  const bubbleHover = useRef(false);
   const [hidden, setHidden] = useState(false);
   const [touring, setTouring] = useState(false);
   const [step, setStep] = useState(0);
@@ -318,6 +327,8 @@ export function Chalky() {
   const [greet, setGreet] = useState(false);
   const [mood, setMoodState] = useState("idle");
   const [live, setLive] = useState(null);
+  const [away, setAway] = useState(false);
+  const [autoLeft, setAutoLeft] = useState({ step: -1, left: AUTO_MS });
   const clock = useIndiaClock(touring, locale);
 
   const setMood = useCallback((m) => {
@@ -340,7 +351,8 @@ export function Chalky() {
   useEffect(() => {
     state.current.touring = touring;
     state.current.arrived = arrived;
-  }, [touring, arrived]);
+    state.current.greet = greet;
+  }, [touring, arrived, greet]);
 
   // Scroll velocity makes Chalky lean and stretch (applied in the ticker below).
   useLenis((l) => {
@@ -363,7 +375,10 @@ export function Chalky() {
     const vh = window.innerHeight;
     const sheet = isPhone() ? (bubble.current?.offsetHeight || 220) + 20 : 0;
     const maxY = vh - S - 8 - sheet;
-    if (!el) return corner();
+    if (!el) {
+      anchorRect.current = null;
+      return corner();
+    }
     // Headings are full-width blocks; sit beside the words, not the block.
     let r = el.getBoundingClientRect();
     // (SplitText wraps lines in block divs, so measure the text nodes themselves.)
@@ -383,13 +398,16 @@ export function Chalky() {
       }
       if (R > L) r = { left: L, right: R, top: T, bottom: B, width: R - L, height: B - T };
     }
+    anchorRect.current = r;
+    // Scrolled away from this stop: don't pin Chalky over unrelated content.
+    const away = r.bottom < NAV_H - 20 || r.top > vh - 40;
     if (isPhone()) {
-      return { x: clamp(r.right - S, 8, vw - S - 8), y: clamp(r.top - S + 14, NAV_H, Math.max(NAV_H, maxY)) };
+      return { x: clamp(r.right - S, 8, vw - S - 8), y: clamp(r.top - S + 14, NAV_H, Math.max(NAV_H, maxY)), away };
     }
     let x = r.right + 14;
     if (x + S > vw - 12) x = r.left - S - 14;
     if (x < 12) x = clamp(r.left, 12, vw - S - 12);
-    return { x, y: clamp(r.top + Math.min(r.height, 140) / 2 - S / 2, NAV_H, maxY) };
+    return { x, y: clamp(r.top + Math.min(r.height, 140) / 2 - S / 2, NAV_H, maxY), away };
   }, []);
 
   // Write pet position straight to the DOM (no React render per frame). The
@@ -398,17 +416,51 @@ export function Chalky() {
     pos.current.x = x;
     pos.current.y = y;
     const b = bubble.current;
-    // Phones: the bubble is docked at the bottom, so Chalky perches above it.
-    const shownY = b && isPhone() ? Math.min(y, window.innerHeight - b.offsetHeight - petSize() - 18) : y;
-    if (wrap.current) gsap.set(wrap.current, { x, y: shownY });
-    if (!b || isPhone()) return;
     const S = petSize();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    // Phones: the bubble is docked at the bottom, so Chalky perches above it.
+    let px = x;
+    let py = b && isPhone() && !awayRef.current ? Math.min(y, vh - b.offsetHeight - S - 18) : y;
+    // Peeking: tuck into the nearest screen edge so only the top of the head shows.
+    const pk = peek.current.v;
+    if (pk > 0.001) {
+      const d = { l: px, r: vw - px - S, t: py - NAV_H, b: vh - py - S };
+      const edge = Object.keys(d).reduce((a, k) => (d[k] < d[a] ? k : a), "b");
+      const off = (Math.max(0, d[edge]) + S * 0.64) * pk;
+      if (edge === "b") py += off;
+      else if (edge === "t") py -= off;
+      else if (edge === "l") px -= off;
+      else px += off;
+    }
+    if (wrap.current) gsap.set(wrap.current, { x: px, y: py });
+    if (!b || (isPhone() && !awayRef.current)) return;
+    // Bubble: try each side of Chalky and take the one that covers the least
+    // of the section being presented (and of Chalky), staying on screen.
     const bw = b.offsetWidth;
     const bh = b.offsetHeight;
-    const left = x + S / 2 < window.innerWidth / 2 ? x + S + 10 : x - bw - 10;
+    const fit = (bx, by) => [clamp(bx, 12, vw - bw - 12), clamp(by, NAV_H, vh - bh - 12)];
+    const cands = {
+      right: fit(px + S + 10, py + S / 2 - bh / 2),
+      left: fit(px - bw - 10, py + S / 2 - bh / 2),
+      below: fit(px + S / 2 - bw / 2, py + S + 10),
+      above: fit(px + S / 2 - bw / 2, py - bh - 10),
+    };
+    const overlap = (ax, ay, aw, ah, r) => (r ? Math.max(0, Math.min(ax + aw, r.right + 8) - Math.max(ax, r.left - 8)) * Math.max(0, Math.min(ay + ah, r.bottom + 8) - Math.max(ay, r.top - 8)) : 0);
+    const petR = { left: px, right: px + S, top: py, bottom: py + S };
+    const ar = state.current.touring && !awayRef.current ? anchorRect.current : null;
+    let best = bubbleSide.current in cands ? bubbleSide.current : "right";
+    let bestScore = Infinity;
+    for (const [side, [bx, by]] of Object.entries(cands)) {
+      const score = overlap(bx, by, bw, bh, ar) * 1.5 + overlap(bx, by, bw, bh, petR) * 3 + Math.hypot(bx + bw / 2 - (px + S / 2), by + bh / 2 - (py + S / 2)) * 4 + (side === bubbleSide.current ? 0 : 2500);
+      if (score < bestScore) {
+        bestScore = score;
+        best = side;
+      }
+    }
+    bubbleSide.current = best;
     const B = bub.current;
-    B.tx = clamp(left, 12, window.innerWidth - bw - 12);
-    B.ty = clamp(y + S / 2 - bh / 2, NAV_H, window.innerHeight - bh - 12);
+    [B.tx, B.ty] = cands[best];
     if (B.el !== b) {
       // Fresh bubble: start exactly in place.
       B.el = b;
@@ -511,6 +563,8 @@ export function Chalky() {
   const goStep = useCallback(
     (i) => {
       stepRef.current = i;
+      awayRef.current = false;
+      setAway(false);
       setStep(i);
       setArrived(false);
       const stop = STOPS[i];
@@ -558,6 +612,8 @@ export function Chalky() {
   }, [goStep, live]);
 
   const endTour = useCallback(() => {
+    awayRef.current = false;
+    setAway(false);
     setTouring(false);
     setAuto(false);
     setArrived(false);
@@ -599,18 +655,44 @@ export function Chalky() {
     const cur = { r: 0, s: 1 };
     const reduced = reducedMotion();
     const tick = () => {
-      const k = 1 - Math.pow(1 - 0.16, gsap.ticker.deltaRatio());
+      const dr = gsap.ticker.deltaRatio();
+      const k = 1 - Math.pow(1 - 0.16, dr);
       const st = state.current;
-      if (!traveling.current && !drag.current.active) {
-        const s = st.touring && st.arrived ? spotFor(stepRef.current) : st.touring ? null : corner();
-        if (s) {
-          const dx = s.x - pos.current.x;
-          const dy = s.y - pos.current.y;
-          if (Math.abs(dx) > 0.3 || Math.abs(dy) > 0.3) place(pos.current.x + dx * (reduced ? 1 : k), pos.current.y + dy * (reduced ? 1 : k));
+      let s = null;
+      let isAway = awayRef.current;
+      if (st.touring && st.arrived) {
+        const sp = spotFor(stepRef.current);
+        isAway = sp.away;
+        s = isAway ? corner() : sp;
+      } else if (!st.touring) {
+        s = corner();
+        isAway = false;
+      }
+      if (isAway !== awayRef.current) {
+        awayRef.current = isAway;
+        setAway(isAway);
+      }
+      // Peek (tuck into the edge) while resting on content, while the page is
+      // scrolling, or while the tour waits off-screen; pop out on hover.
+      const P = peek.current;
+      P.target =
+        !st.hover && !drag.current.active && !traveling.current && (isAway || (!st.touring && !st.greet && (covering.current || performance.now() - lastScroll.current < 1100)))
+          ? 1
+          : 0;
+      const peekMoving = Math.abs(P.target - P.v) > 0.002;
+      if (peekMoving) P.v += (P.target - P.v) * (reduced ? 1 : 1 - Math.pow(1 - 0.14, dr));
+      let moved = false;
+      if (s && !traveling.current && !drag.current.active) {
+        const dx = s.x - pos.current.x;
+        const dy = s.y - pos.current.y;
+        if (Math.abs(dx) > 0.3 || Math.abs(dy) > 0.3) {
+          place(pos.current.x + dx * (reduced ? 1 : k), pos.current.y + dy * (reduced ? 1 : k));
+          moved = true;
         }
       }
+      if (!moved && peekMoving && !traveling.current && !drag.current.active) place(pos.current.x, pos.current.y);
       const B = bub.current;
-      if (B.el && bubble.current === B.el && !isPhone()) {
+      if (B.el && bubble.current === B.el && (!isPhone() || awayRef.current)) {
         const kb = reduced ? 1 : 1 - Math.pow(1 - 0.22, gsap.ticker.deltaRatio());
         B.x += (B.tx - B.x) * kb;
         B.y += (B.ty - B.y) * kb;
@@ -632,10 +714,28 @@ export function Chalky() {
     };
     gsap.ticker.add(tick);
     const kick = () => place(pos.current.x, pos.current.y);
+    const onScroll = () => (lastScroll.current = performance.now());
+    // Is Chalky's resting spot on top of text, links or images? Checked a few
+    // times a second at five points across its body.
+    const coverCheck = () => {
+      if (state.current.touring || document.hidden) return (covering.current = false);
+      const c = corner();
+      const S = petSize();
+      covering.current = [[0.5, 0.5], [0.22, 0.3], [0.78, 0.3], [0.22, 0.85], [0.78, 0.85]].some(([fx, fy]) => {
+        const under = document
+          .elementsFromPoint(c.x + S * fx, c.y + S * fy)
+          .find((e) => !wrap.current?.contains(e) && !bubble.current?.contains(e) && !e.closest("header"));
+        return !!under?.closest(CONTENT);
+      });
+    };
+    const coverId = setInterval(coverCheck, 400);
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", kick);
     ScrollTrigger.addEventListener("refresh", kick);
     return () => {
       gsap.ticker.remove(tick);
+      clearInterval(coverId);
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", kick);
       ScrollTrigger.removeEventListener("refresh", kick);
     };
@@ -646,11 +746,23 @@ export function Chalky() {
     place(pos.current.x, pos.current.y);
   });
 
-  // Auto-play advances after each landing.
+  // Auto-play counts down after each landing, then moves on. The countdown
+  // pauses while the visitor hovers the bubble or has scrolled away.
   useEffect(() => {
     if (!auto || !touring || !arrived) return;
-    const id = setTimeout(next, AUTO_MS);
-    return () => clearTimeout(id);
+    let left = AUTO_MS;
+    let last = performance.now();
+    const id = setInterval(() => {
+      const now = performance.now();
+      if (!bubbleHover.current && !awayRef.current && !document.hidden) left -= now - last;
+      last = now;
+      setAutoLeft({ step, left: Math.max(0, left) });
+      if (left <= 0) {
+        clearInterval(id);
+        next();
+      }
+    }, 100);
+    return () => clearInterval(id);
   }, [auto, touring, arrived, step, next]);
 
   // Keyboard: Escape ends the tour, arrows step through it.
@@ -924,11 +1036,13 @@ export function Chalky() {
     }
     sfx.boop();
     burst("star", 3, 0.7);
-    if (touring) next();
+    if (touring && away) goStep(stepRef.current);
+    else if (touring) next();
     else startTour();
   };
 
   const onEnter = (e) => {
+    state.current.hover = true;
     if (e.pointerType !== "mouse") return;
     setMood((m) => (m === "idle" ? "happy" : m));
     if (!traveling.current) sfx.chirp({ soft: true });
@@ -939,6 +1053,7 @@ export function Chalky() {
     }
   };
   const onLeave = () => {
+    state.current.hover = false;
     stopPetting();
     if (!traveling.current && !drag.current.active) setMood((m) => (m === "happy" ? "idle" : m));
   };
@@ -981,7 +1096,10 @@ export function Chalky() {
   const stop = STOPS[step];
   const lines = touring ? (liveLines(stop.key, live, clock, t) || []).filter(Boolean) : [];
   const loadingLive = touring && !live && !NO_LIVE.includes(stop.key);
-  const showBubble = touring || greet || mood === "sleep";
+  const showBubble = touring || greet;
+  const autoActive = auto && touring && arrived && !away;
+  const autoFrac = autoActive && autoLeft.step === step ? 1 - autoLeft.left / AUTO_MS : 0;
+  const autoSecs = Math.ceil((autoLeft.step === step ? autoLeft.left : AUTO_MS) / 1000);
   const btn = "pet-btn inline-flex min-h-9 items-center justify-center gap-1 rounded-full px-3.5 text-[13px] font-semibold";
   const SoundIcon = soundOn ? FiVolume2 : FiVolumeX;
   const soundBtn = (
@@ -1005,11 +1123,28 @@ export function Chalky() {
           id={bubbleId}
           role="region"
           aria-label={t("pet.name")}
+          onPointerEnter={() => (bubbleHover.current = true)}
+          onPointerLeave={() => (bubbleHover.current = false)}
           className={`pet-tip fixed z-[71] rounded-[22px] border border-rule bg-surface text-ink shadow-[0_30px_70px_-24px_rgb(16_17_20/0.5)] ${
-            touring ? "w-[min(348px,calc(100vw-24px))]" : "w-[min(290px,calc(100vw-110px))]"
-          } max-sm:!bottom-3 max-sm:!left-3 max-sm:!right-3 max-sm:!top-auto max-sm:!w-auto max-sm:!transform-none sm:left-0 sm:top-0`}
+            touring && away
+              ? "w-auto"
+              : touring
+                ? "w-[min(348px,calc(100vw-24px))] max-sm:!bottom-3 max-sm:!left-3 max-sm:!right-3 max-sm:!top-auto max-sm:!w-auto max-sm:!transform-none"
+                : "w-[min(290px,calc(100vw-110px))] max-sm:!bottom-3 max-sm:!left-3 max-sm:!right-3 max-sm:!top-auto max-sm:!w-auto max-sm:!transform-none"
+          } left-0 top-0`}
         >
-          {touring ? (
+          {touring && away ? (
+            // Scrolled away mid-tour: shrink to a small pill instead of covering the page.
+            <div className="flex items-center gap-2 p-1.5 pl-3.5">
+              <span className="t-sm whitespace-nowrap text-ink-2">{t("pet.paused", { i: step + 1, n: STOPS.length })}</span>
+              <button type="button" className={`${btn} bg-chalk text-chalk-ink`} onClick={() => goStep(stepRef.current)}>
+                {t("pet.resume")}
+              </button>
+              <button type="button" onClick={endTour} aria-label={t("pet.end")} className="pet-btn grid h-8 w-8 place-items-center rounded-full border border-rule">
+                <FiX className="h-4 w-4" />
+              </button>
+            </div>
+          ) : touring ? (
             <div className="p-4">
               <div className="flex items-center justify-between gap-3">
                 <p className="t-sm flex items-center gap-2 text-ink-2">
@@ -1051,8 +1186,13 @@ export function Chalky() {
                 {STOPS.map((s, i) => (
                   <span key={s.key} className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-rule">
                     <span
-                      className="absolute inset-0 origin-left rounded-full bg-chalk transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)]"
-                      style={{ transform: `scaleX(${i <= step ? 1 : 0})`, transitionDelay: i === step ? "150ms" : "0ms" }}
+                      className={`absolute inset-0 origin-left rounded-full bg-chalk ${
+                        autoActive && i === step ? "transition-transform duration-100 ease-linear" : "transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)]"
+                      }`}
+                      style={{
+                        transform: `scaleX(${i < step ? 1 : i === step ? (autoActive ? autoFrac : 1) : 0})`,
+                        transitionDelay: i === step && !autoActive ? "150ms" : "0ms",
+                      }}
                     />
                   </span>
                 ))}
@@ -1061,8 +1201,44 @@ export function Chalky() {
                 <button type="button" className={`${btn} border border-rule`} onClick={prev} disabled={step === 0}>
                   <FiChevronLeft aria-hidden className="h-4 w-4" /> {t("pet.back")}
                 </button>
-                <button type="button" className={`${btn} border border-rule`} onClick={() => setAuto((a) => !a)} aria-pressed={auto}>
-                  {auto ? <FiPause aria-hidden className="h-3.5 w-3.5" /> : <FiPlay aria-hidden className="h-3.5 w-3.5" />} {auto ? t("pet.pause") : t("pet.auto")}
+                <button
+                  type="button"
+                  className={`${btn} border ${auto ? "border-chalk" : "border-rule"}`}
+                  onClick={() => setAuto((a) => !a)}
+                  aria-pressed={auto}
+                  aria-label={auto ? t("pet.pause") : t("pet.auto")}
+                >
+                  {auto ? (
+                    // Countdown ring around the pause icon, plus seconds left.
+                    <span className="relative grid h-5 w-5 place-items-center" aria-hidden>
+                      <svg viewBox="0 0 20 20" className="absolute inset-0 -rotate-90">
+                        <circle cx="10" cy="10" r="8.5" fill="none" stroke="var(--rule)" strokeWidth="2" />
+                        <circle
+                          cx="10"
+                          cy="10"
+                          r="8.5"
+                          fill="none"
+                          stroke="var(--chalk)"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeDasharray={53.4}
+                          strokeDashoffset={53.4 * (1 - autoFrac)}
+                          className="transition-[stroke-dashoffset] duration-100 ease-linear"
+                        />
+                      </svg>
+                      <FiPause className="h-2.5 w-2.5" />
+                    </span>
+                  ) : (
+                    <FiPlay aria-hidden className="h-3.5 w-3.5" />
+                  )}
+                  {auto ? (
+                    <span>
+                      {t("pet.pause")}
+                      {autoActive && step < STOPS.length - 1 && <span className="ml-1 tabular-nums text-ink-2">{autoSecs}s</span>}
+                    </span>
+                  ) : (
+                    t("pet.auto")
+                  )}
                 </button>
                 {step < STOPS.length - 1 ? (
                   <button type="button" className={`${btn} ml-auto bg-chalk text-chalk-ink`} onClick={next}>
@@ -1087,8 +1263,8 @@ export function Chalky() {
             </div>
           ) : (
             <div className="p-4">
-              <Speech key={`${locale}-${greet ? "idle" : "sleep"}`} text={greet ? t("pet.idle") : t("pet.sleep")} className="text-[14px] leading-snug" />
-              {greet && <p className="t-sm mt-2 text-ink-2">{t("pet.tricks")}</p>}
+              <Speech key={`${locale}-idle`} text={t("pet.idle")} className="text-[14px] leading-snug" />
+              <p className="t-sm mt-2 text-ink-2">{t("pet.tricks")}</p>
               <div className="mt-3 flex items-center gap-2">
                 <button type="button" className={`${btn} bg-chalk text-chalk-ink`} onClick={startTour}>
                   {t("pet.start")}
